@@ -12,8 +12,7 @@ from django.contrib.auth import authenticate, login, logout
 
 
 def music_page(request):
-    paginator = Paginator(Song.object.all(), 1)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    context = {"page_obj": page_obj}
+    song = Song(title='Paranoid Android', artist='Radiohead')
+    song.save()
+    context = {'song': song}
     return render(request, 'music_page.html', context)
