@@ -20,6 +20,7 @@ from django.urls import path
 from django.urls import path
 from django.contrib.auth import views as a_views
 from Users import views as Users_views
+from Songs import views as Songs_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -31,21 +32,24 @@ urlpatterns = [
     path('reset_password/',
          a_views.PasswordResetView.as_view(template_name="password_reset.html"),
          name="reset_password"
-    ),
+         ),
 
     path('reset_password_sent/',
          a_views.PasswordResetDoneView.as_view(template_name="password_reset_sent.html"),
          name="password_reset_done"
-    ),
+         ),
 
     path('reset/<uidb64>/<token>/',
          a_views.PasswordResetConfirmView.as_view(template_name="password_reset_form.html"),
          name="password_reset_confirm"
-    ),
+         ),
 
     path('reset_password_complete/',
          a_views.PasswordResetCompleteView.as_view(template_name="password_reset_done.html"),
          name="password_reset_complete"
-    ),
+         ),
+
+    path('music', Songs_views.music_page, name='music'),
+    path('', Songs_views.music_page, name=''),
 
 ]

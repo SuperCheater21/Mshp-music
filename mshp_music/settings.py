@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'Users.apps.UsersConfig',
     'Authors.apps.AuthorsConfig',
     'Playlists.apps.PlaylistsConfig',
-    'Songs.apps.SongsConfig',
+    #'Songs.apps.SongsConfig',
+    'Songs',
     'mshp_music'
 ]
 
