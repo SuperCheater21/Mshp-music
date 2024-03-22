@@ -16,10 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-
 from django.urls import path
 from django.contrib.auth import views as a_views
 from Users import views as Users_views
+from Songs import views as Songs_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -47,5 +47,11 @@ urlpatterns = [
          a_views.PasswordResetCompleteView.as_view(template_name="password_reset_done.html"),
          name="password_reset_complete"
     ),
+
+
+    path('music', Songs_views.music_page, name='music'),
+    path('', Songs_views.music_page, name=''),
+
+
 
 ]
