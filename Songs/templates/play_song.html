@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Play Song</title>
+    {% load static %}
+    <script src="{% static 'playback.js' %}"></script>
+</head>
+<body>
+    <h1>Playing "{{ song.title }}"</h1>
+    <h2>{{song.audio_file.url}}</h2>
+<!--    <figure>-->
+<!--  <figcaption>Listen to the T-Rex:</figcaption>-->
+<!--  <audio controls src="../../{{song.audio_file.url}}"></audio>-->
+<!--</figure>-->
+    <script>
+        const songUrl = '{{ song.audio_file.url}}';
+        playSong(songUrl);
+    </script>
+</body>
+</html>

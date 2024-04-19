@@ -49,7 +49,8 @@ urlpatterns = [
          name="password_reset_complete"
          ),
 
-    path('music', Songs_views.music_page, name='music'),
-    path('', Songs_views.music_page, name=''),
+    #path('music', Songs_views.music_page, name='music'),
+    path('', Songs_views.song_list, name='song_list'),
+    path('play/<int:song_id>/', Songs_views.play_song, name='play_song')
 
 ]
