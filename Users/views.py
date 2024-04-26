@@ -4,9 +4,13 @@ from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
 from django.contrib import messages
+from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
 
 from django.contrib.auth.decorators import login_required
-
+#from .models import Friend
+#from .forms import AddFriendsForm, DeleteFriendsForm
 from django.contrib.auth import authenticate, login, logout
 
 
@@ -58,3 +62,5 @@ def register(request):
 def logoutPage(request):
     logout(request)
     return render(request, 'logout.html')
+
+

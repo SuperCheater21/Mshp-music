@@ -4,6 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import Profile
 
 
+
 class UserRegisterForm(UserCreationForm):
 
     class Meta:
