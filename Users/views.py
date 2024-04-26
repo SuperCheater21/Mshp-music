@@ -15,8 +15,8 @@ from django.contrib.auth import authenticate, login, logout
 
 
 def loginPage(request):
-    if request.user.is_authenticated:
-        return redirect('index')
+   # if request.user.is_authenticated:
+        ##return redirect('index')
 
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -26,7 +26,7 @@ def loginPage(request):
 
         if user is not None:
             login(request, user)
-            return redirect('index')
+            ##return redirect('index')
         else:
             messages.info(request, 'USERNAME or PASSWORD is incorrect')
 
@@ -39,8 +39,8 @@ def restore(request):
 
 
 def register(request):
-    if request.user.is_authenticated:
-        return redirect('index')
+    #if request.user.is_authenticated:
+        #return redirect('index')
 
     form = UserRegisterForm()
 
@@ -62,5 +62,6 @@ def register(request):
 def logoutPage(request):
     logout(request)
     return render(request, 'logout.html')
+
 
 

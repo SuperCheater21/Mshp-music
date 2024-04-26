@@ -31,21 +31,21 @@ urlpatterns = [
     path('logout', Users_views.logoutPage, name='logout'),
 
     # Password reset links (ref: https://github.com/django/django/blob/master/django/contrib/auth/views.py)
-    path('password_change/done/',
+    path('password_change_done/',
          a_views.PasswordChangeDoneView.as_view(template_name='password_reset/password_change_done.html'),
          name='password_change_done'),
 
     path('password_change/', a_views.PasswordChangeView.as_view(template_name='password_reset/password_change.html'),
          name='password_change'),
 
-    path('password_reset/done/',
-         a_views.PasswordResetCompleteView.as_view(template_name='password_reset/password_reset_done.html'),
+    path('password_reset_done/',
+         a_views.PasswordResetDoneView.as_view(template_name='password_reset/password_reset_done.html'),
          name='password_reset_done'),
 
     path('reset/<uidb64>/<token>/', a_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('password_reset/', a_views.PasswordResetView.as_view(), name='password_reset'),
 
-    path('reset/done/',
+    path('password_reset_complete/',
          a_views.PasswordResetCompleteView.as_view(template_name='password_reset/password_reset_complete.html'),
          name='password_reset_complete'),
 
