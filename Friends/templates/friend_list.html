@@ -1,10 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>Friends list</title>
+
+    <style>
+        a.button{
+            padding: 1px 6px;
+            border: 1px outset buttonborder;
+            border-radius: 3px;
+            color: buttontext;
+            background-color: buttonface;
+            text-decoration: none;
+        }
+    </style>
 </head>
 <body>
-$END$
+    <h3>YOUR FRIENDS LIST</h3>
+    <div>
+        {{#each friends}}
+            <div>
+                    <p  style="text-align: center">{{this.username}}
+                        <a href="{% url 'delete_friend' %}" class="button">Delete</a>
+                    </p
+
+            </div>
+        {{/each}}
+    </div>
+
+
+    <div>
 </body>
 </html>
