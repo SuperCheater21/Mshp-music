@@ -14,6 +14,9 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from mshp_music import settings
+
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
 
@@ -54,3 +57,6 @@ urlpatterns = [
     path('play/<int:song_id>/', Songs_views.play_song, name='play_song')
 
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
