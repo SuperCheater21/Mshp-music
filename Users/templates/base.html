@@ -5,18 +5,18 @@
 
 {% load static %}
 <head>
+	 <title>{% block title %} Base {% endblock %}</title>
 
+	{% block block_head %}
+
+	{% endblock %}
 </head>
 
-<body>
 
 <body>
-<div class="main">
 	{% block content %}
 
-	{% endblock content %}
-</div>
-
+	{% endblock %}
 </body>
 
 
