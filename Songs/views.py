@@ -22,5 +22,7 @@ def play_song(request, song_id):
     song = get_object_or_404(Song, pk=song_id)  # Get song by ID
     # Logic to handle song playback using JavaScript or a third-party player library
     # (implementation details depend on your chosen approach)
-    context = {'song': song}
+    context = {'song': song,
+               'next_song_id': song_id + 1,
+               'prev_song_id': song_id - 1}
     return render(request, 'play_song.html', context)

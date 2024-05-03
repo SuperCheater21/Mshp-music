@@ -6,13 +6,20 @@
     <title>Playing {{song.artist}} - {{song.title}}</title>
 </head>
 <body>
+    <a href="../..">Song list</a>
+    <hr>
     <h1>{{ song.title }}</h1>
     <h2>{{ song.artist }}</h2>
-
+    <img src="{{song.image.url}}">
+    <a href="../{{prev_song_id}}/">Previous song</a>
     <audio controls>
       <source src="{{ song.audio_file.url}}" type="audio/mpeg">
       Your browser does not support the audio element.
     </audio>
+    <a href="../{{next_song_id}}/">Next song</a>
+    <hr>
+    <h2>Lyrics:</h2>
+    <section>{{song.lyrics}}</section>
 </body>
 </html>
 
