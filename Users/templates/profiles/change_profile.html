@@ -1,9 +1,8 @@
 {% extends "base.html" %}
 {% block title %} Profile settings {% endblock title %}
 {% block content %}
-    <div class="row my-3 p-3">
-        <img class="rounded-circle account-img" src="{{ user.profile.avatar.url }} " style="cursor: pointer;"/>
-    </div>
+    <a href="../profile/{{ user.profile.slug }}"><img class="rounded-circle account-img" src="../../../media/{{ user.profile.image }} " style="cursor: pointer;"/> </a>
+
     {% if user_form.errors %}
         <div class="alert alert-danger alert-dismissible" role="alert">
             <div id="form_errors">
@@ -27,11 +26,16 @@
                         <label class="small mb-1">Email:</label>
                             {{ user_form.email }}
                     </div>
-                    <label class="small mb-1">First name:</label> {{ profile_form.first_name }}
-                    <label class="small mb-1">Last name:</label> {{ profile_form.last_name }}
                     <div class="form-group">
                         <a href="{% url 'password_change' %}">Change Password</a>
                         <hr>
+
+                        <label class="small mb-1">First name:</label>
+                        {{ profile_form.first_name }}
+
+                        <label class="small mb-1">Last name:</label>
+                        {{ profile_form.last_name }}
+
                         <label class="small mb-1">Change Avatar:</label>
                         {{ profile_form.image }}
                     </div>

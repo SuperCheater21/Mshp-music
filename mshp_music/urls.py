@@ -23,7 +23,8 @@ from django.urls import path
 from Users import views as Users_views
 from Songs import views as Songs_views
 from django.views.generic import RedirectView
-
+from django.http import HttpResponse
+from django.contrib.staticfiles.storage import staticfiles_storage
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -33,8 +34,7 @@ urlpatterns = [
     path('logout', Users_views.logoutPage, name='logout'),
     path('profile/<slug:profile_id>/', Users_views.profilePage, name='profile'),
     path('profile/change', Users_views.changeProfile),
-    #path('favicon.ico', RedirectView.as_view(url='../media/favicon')),
-
+    #path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('favicon/favicon.ico'))),
     # Password reset links (ref: https://github.com/django/django/blob/master/django/contrib/auth/views.py)
     path('password_change_done/',
          a_views.PasswordChangeDoneView.as_view(template_name='password_reset/password_change_done.html'),

@@ -14,6 +14,7 @@ from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 from django.dispatch import receiver
 
+from Friends.models import FriendList
 from .models import Profile
 
 
@@ -90,22 +91,25 @@ def changeProfile(request):
 
     if request.method == 'POST':
         user_form = UserUpdateForm(request.POST, instance=request.user)
-        profile_form = ProfileUpdateForm(request.POST, request.FILES, instance=profile)
+        profile_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
 
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
             messages.success(request, 'Your profile is updated successfully')
+            return redirect('../profile/' + request.user.profile.slug)
     else:
         user_form = UserUpdateForm(instance=request.user)
         profile_form = ProfileUpdateForm(instance=request.user.profile)
 
-    return render(request, 'profiles/change_profile.html', {'user_form': user_form, 'profile_form': profile_form})
+    return render(request, 'profiles/change_profile.html', {'user_form': user_form, 'profile_form': profile_form, 'user': request.user})
 
 @receiver(post_save, sender=User)
 def post_save_create_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
+        FriendList.objects.create(profile=instance.profile)
+
 
 @receiver(post_save, sender=User)
 def save_profile(sender, instance, **kwargs):
