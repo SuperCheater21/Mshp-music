@@ -72,14 +72,14 @@ def logoutPage(request):
 def profilePage(request, profile_id):
     try:
         profile = Profile.objects.get(slug=profile_id)
-        user = User.objects.get(username=profile.user)
+        #user = User.objects.get(username=profile.user)
 
-        if user == request.user:
+        if profile.user == request.user:
             is_your_profile = True
         else:
             is_your_profile = False
 
-        context = {"user": user, "profile": profile,"exist": True, "is_your_profile": is_your_profile}
+        context = {"user": profile.user, "profile": profile,"exist": True, "is_your_profile": is_your_profile}
     except Profile.DoesNotExist:
         context = {"exist": False}
     return render(request, 'profiles/profile.html', context)

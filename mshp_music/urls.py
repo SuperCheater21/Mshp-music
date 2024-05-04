@@ -22,6 +22,7 @@ from django.contrib.auth import views as a_views
 from django.urls import path
 from Users import views as Users_views
 from Songs import views as Songs_views
+from Friends import views as Friends_views
 from django.views.generic import RedirectView
 from django.http import HttpResponse
 from django.contrib.staticfiles.storage import staticfiles_storage
@@ -33,8 +34,12 @@ urlpatterns = [
     path('register', Users_views.register, name='register'),
     path('logout', Users_views.logoutPage, name='logout'),
     path('profile/<slug:profile_id>/', Users_views.profilePage, name='profile'),
+    path('profile/<slug:profile_id>/send',Friends_views.send_request, name='send_friend_request'),
+    path('profile/<slug:profile_id>/reject',Friends_views.reject_request, name='reject_friend_request'),
+    path('profile/<slug:profile_id>/accept',Friends_views.accept_request, name='accept_friend_request'),
+    path('profile/<slug:profile_id>/delete',Friends_views.delete_friend, name='delete_friend'),
     path('profile/change', Users_views.changeProfile),
-    #path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('favicon/favicon.ico'))),
+
     # Password reset links (ref: https://github.com/django/django/blob/master/django/contrib/auth/views.py)
     path('password_change_done/',
          a_views.PasswordChangeDoneView.as_view(template_name='password_reset/password_change_done.html'),
