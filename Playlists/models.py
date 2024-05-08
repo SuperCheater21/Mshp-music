@@ -1,8 +1,7 @@
 from django.db import models
 from Songs.models import Song
+from Genres.models import Genre
 
-class Genre(models.Model):
-    name = models.TextField()
 
 class Playlist(models.Model):
     title = models.TextField()
