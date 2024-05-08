@@ -40,6 +40,9 @@ urlpatterns = [
     path('profile/<slug:profile_id>/delete',Friends_views.delete_friend, name='delete_friend'),
     path('profile/change', Users_views.changeProfile),
 
+    path('friend/list', Friends_views.show_list),
+    path('friend/requests', Friends_views.show_requests),
+
     # Password reset links (ref: https://github.com/django/django/blob/master/django/contrib/auth/views.py)
     path('password_change_done/',
          a_views.PasswordChangeDoneView.as_view(template_name='password_reset/password_change_done.html'),

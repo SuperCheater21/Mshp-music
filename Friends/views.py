@@ -11,6 +11,8 @@ from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 from django.http import Http404, HttpResponse, HttpResponseForbidden
 from django.dispatch import receiver
+from django.http import HttpResponse
+
 
 from django.contrib.auth.models import User
 from .models import FriendRequest, FriendList
@@ -22,7 +24,8 @@ def send_request(request,profile_id):
     receiver_user = Profile.objects.get(slug=profile_id)
 
     friend_request = FriendRequest.objects.get_or_create(sender=sender_user,receiver=receiver_user)
-    return redirect('../' + profile_id)
+
+    return HttpResponse(status=204)
 
 @login_required(login_url='login')
 def accept_request(request,profile_id):
@@ -35,7 +38,8 @@ def accept_request(request,profile_id):
         friend_request.save()
     except FriendRequest.DoesNotExist:
         pass
-    return redirect('../' + profile_id)
+
+    return HttpResponse(status=204)
 
 @login_required(login_url='login')
 def reject_request(request,profile_id):
@@ -48,7 +52,8 @@ def reject_request(request,profile_id):
         friend_request.save()
     except FriendRequest.DoesNotExist:
         pass
-    return redirect('../' + profile_id)
+
+    return HttpResponse(status=204)
 
 
 @login_required(login_url='login')
@@ -64,8 +69,7 @@ def delete_friend(request,profile_id):
     target_profile.save()
     user_friend_list.save()
 
-    return redirect('../' + profile_id)
-
+    return HttpResponse(status=204)
 
 @receiver(post_save, sender=FriendRequest)
 def post_save_interaction_with_friend_request(sender, instance, created, **kwargs):
@@ -90,8 +94,18 @@ def post_save_interaction_with_friend_request(sender, instance, created, **kwarg
     elif instance.status == 'rejected':
         #print('rejected')
         FriendRequest.objects.filter(pk=instance.pk).delete()
+@login_required(login_url='login')
+def show_requests(request):
+    received_list_of_requests = FriendRequest.objects.filter(receiver=request.user.profile)
+    sent_list_of_requests = FriendRequest.objects.filter(sender=request.user.profile)
+
+    return render(request, 'requests_list.html', {"received": received_list_of_requests, "sent": sent_list_of_requests})
+
+@login_required(login_url='login')
+def show_list(request):
+     friend_list = FriendList.objects.get(profile=request.user.profile)
+     #print(friend_list.friends)
 
 
-
-
+     return render(request, 'friend_list.html', {"friend_list": friend_list})
 
