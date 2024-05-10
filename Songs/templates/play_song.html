@@ -10,7 +10,9 @@
     <hr>
     <h1>{{ song.title }}</h1>
     <h2>{{ song.artist }}</h2>
-    <img src="{{song.image.url}}">
+    <img src="{{song.image.url}}"
+        width="316"
+        height="316">
     <a href="../{{prev_song_id}}/">Previous song</a>
     <audio controls>
       <source src="{{ song.audio_file.url}}" type="audio/mpeg">
@@ -25,22 +27,3 @@
 
 <!DOCTYPE html>
 <html>
-<!--<head>-->
-<!--    <title>Play Song</title>-->
-<!--    {% load static %}-->
-<!--    <script src="{% static 'playback.js' %}"></script>-->
-<!--</head>-->
-<!--<body>-->
-<!--    <h1>Playing "{{ song.title }}"</h1>-->
-<!--    <h2>{{song.audio_file.url}}</h2>-->
-<!--    <audio controls>{{song.audio_file}}</audio>-->
-<!--&lt;!&ndash;    <figure>&ndash;&gt;-->
-<!--&lt;!&ndash;  <figcaption>Listen to the T-Rex:</figcaption>&ndash;&gt;-->
-<!--&lt;!&ndash;  <audio controls src="../../{{song.audio_file.url}}"></audio>&ndash;&gt;-->
-<!--&lt;!&ndash;</figure>&ndash;&gt;-->
-<!--    <script>-->
-<!--        const songUrl = '{{ song.audio_file.url}}';-->
-<!--        playSong(songUrl);-->
-<!--    </script>-->
-<!--</body>-->
-<!--</html>-->

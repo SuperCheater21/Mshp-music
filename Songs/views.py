@@ -30,18 +30,3 @@ def play_song(request, song_id):
                }
     return render(request, 'play_song.html', context)
 
-
-# def check_element_position(element_id):
-#     try:
-#         element = Element.objects.get(pk=element_id)
-#         first_element = Element.objects.order_by('id').first()
-#         last_element = Element.objects.order_by('id').last()
-#
-#         if element == first_element:
-#             print("Это первый элемент в базе данных")
-#         elif element == last_element:
-#             print("Это последний элемент в базе данных")
-#         else:
-#             print("Это не первый и не последний элемент в базе данных")
-#     except Element.DoesNotExist:
-#         print("Элемент с таким ID не найден")
