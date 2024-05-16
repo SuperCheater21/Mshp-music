@@ -14,6 +14,9 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from mshp_music import settings
+
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls import include
@@ -61,6 +64,12 @@ urlpatterns = [
     path('password_reset_complete/',
          a_views.PasswordResetCompleteView.as_view(template_name='password_reset/password_reset_complete.html'),
          name='password_reset_complete'),
+    path('', Songs_views.song_list, name='song_list'),
+    path('play/<int:song_id>/', Songs_views.play_song, name='play_song')
 
 
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

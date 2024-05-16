@@ -1,0 +1,21 @@
+<html>
+    <head>
+        <title>Music player</title>
+    </head>
+    <body>
+        <div class="music-player"></div>
+        {% for items in range_obj %}
+        <div class="cover">
+            <img src="{{item.image.url}}"/>
+        </div>
+
+        <div class="title">
+            <h3>
+                {{item.author}}
+            </h3>
+            <h1>
+                {{item.title}}
+            </h1>
+        </div>
+    </body>
+</html>
