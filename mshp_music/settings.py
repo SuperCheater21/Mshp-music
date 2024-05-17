@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'Playlists.apps.PlaylistsConfig',
     # 'Songs.apps.SongsConfig',
     'Songs',
-    'mshp_music'
+    'mshp_music',
+    'bootstrap5'
 ]
 
 MIDDLEWARE = [
@@ -75,6 +76,7 @@ TEMPLATES = [
 ]
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 MEDIA_URL = 'media/audio_files/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/audio_files/')
 
