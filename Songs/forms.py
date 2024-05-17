@@ -1,1 +1,13 @@
 from django import forms
+from .models import Song
+
+
+class SongUploadForm(forms.ModelForm):
+    song_name = forms.CharField(max_length=50,  widget=forms.TextInput(attrs={'class': 'form-control'}))
+    thumbnail = forms.ImageField(widget=forms.FileInput(attrs={'class': 'form-control-file'}))
+    #audio_file =
+    lyrics = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 5}))
+
+    class Meta:
+        model = Song
+        fields = ['song_name', 'thumbnail', 'audio_file', 'lyrics']

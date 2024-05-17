@@ -65,8 +65,9 @@ urlpatterns = [
          a_views.PasswordResetCompleteView.as_view(template_name='password_reset/password_reset_complete.html'),
          name='password_reset_complete'),
     path('', Songs_views.song_list, name='song_list'),
-    path('play/<int:song_id>/', Songs_views.play_song, name='play_song')
-
+    path('play/<int:song_id>/', Songs_views.play_song, name='play_song'),
+    path('playlist/<slug:playlist_id>/upload', Songs_views.upload_song, name='upload_song'),
+    path('myvibe', Songs_views.my_vibe_page, name='my_vibe')
 
 ]
 
