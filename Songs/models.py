@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Song(models.Model):
-    title = models.CharField(max_length=255)
+    song_name = models.CharField(max_length=255)
     artist = models.CharField(max_length=255)
     image = models.ImageField(upload_to='images')
     audio_file = models.FileField(upload_to='')
