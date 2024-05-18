@@ -26,6 +26,7 @@ from django.urls import path
 from Users import views as Users_views
 from Songs import views as Songs_views
 from Friends import views as Friends_views
+from Playlists import views as Playlists_views
 from django.views.generic import RedirectView
 from django.http import HttpResponse
 from django.contrib.staticfiles.storage import staticfiles_storage
@@ -42,6 +43,7 @@ urlpatterns = [
     path('profile/<slug:profile_id>/accept',Friends_views.accept_request, name='accept_friend_request'),
     path('profile/<slug:profile_id>/delete',Friends_views.delete_friend, name='delete_friend'),
     path('profile/change', Users_views.changeProfile),
+    path('profile/change/preference', Users_views.update_profile_preferences),
 
     path('friend/list', Friends_views.show_list),
     path('friend/requests', Friends_views.show_requests),
@@ -65,8 +67,10 @@ urlpatterns = [
          a_views.PasswordResetCompleteView.as_view(template_name='password_reset/password_reset_complete.html'),
          name='password_reset_complete'),
     path('', Songs_views.song_list, name='song_list'),
-    path('play/<int:song_id>/', Songs_views.play_song, name='play_song'),
+    path('play/<slug:song_id>/', Songs_views.play_song_by_slug, name='play_song_by_slug'),
     path('playlist/<slug:playlist_id>/upload', Songs_views.upload_song, name='upload_song'),
+    path('playlist/create', Playlists_views.create_playlist, name='create_playlist'),
+    path('playlist/<slug:playlist_id>/play/<int:song_id>/', Songs_views.play_song_in_playlist, name='play_song_in_playlist'),
     path('myvibe', Songs_views.my_vibe_page, name='my_vibe')
 
 ]
