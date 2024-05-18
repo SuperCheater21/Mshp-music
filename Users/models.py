@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from PIL import Image
 from .utils import get_random_code
+from Genres.models import Genre
 from django.template.defaultfilters import slugify
 
 class Profile(models.Model):
@@ -42,3 +43,16 @@ class Profile(models.Model):
             img.save(self.image.path)
 
         super().save(*args, **kwargs)
+class PreferenceList(models.Model):
+    profile = models.OneToOneField(Profile, on_delete=models.CASCADE)
+    genres = models.ManyToManyField(Genre, default=None ,blank=True, null=True, related_name="genres")
+
+
+    def str(self):
+        return self.profile.user.username
+
+    def get_genres(self):
+        return self.genres.all()
+
+    def count_genres(self):
+        return self.genres.all().count()

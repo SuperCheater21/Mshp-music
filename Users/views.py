@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render
-from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
+from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm, PreferencesSetForm
 from django.contrib import messages
 
 from django.contrib.auth.decorators import login_required
@@ -13,9 +13,11 @@ from django.contrib.auth import authenticate, login, logout
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 from django.dispatch import receiver
+from django.shortcuts import get_object_or_404
 
-from Friends.models import FriendList
-from .models import Profile
+from Friends.models import FriendList, FriendRequest
+from Playlists.models import Playlist
+from .models import Profile, PreferenceList
 
 
 def loginPage(request):
@@ -74,12 +76,35 @@ def profilePage(request, profile_id):
         profile = Profile.objects.get(slug=profile_id)
         #user = User.objects.get(username=profile.user)
 
+        is_your_friend = False
+        is_your_profile = False
+        is_friend_request_sent = False
+        is_sender = False
+        is_receiver = False
+
         if profile.user == request.user:
             is_your_profile = True
         else:
-            is_your_profile = False
 
-        context = {"user": profile.user, "profile": profile,"exist": True, "is_your_profile": is_your_profile}
+            your_friendlist = get_object_or_404(FriendList, profile=request.user.profile)
+
+            if your_friendlist.friends.filter(user=profile).exists():
+                is_your_friend = True
+            else:
+
+                if FriendRequest.objects.filter(sender=profile, receiver=request.user.profile).exists():
+                    is_receiver = True
+                elif FriendRequest.objects.filter(sender=request.user.profile, receiver=profile).exists():
+                    is_sender = True
+
+
+
+        genres = PreferenceList.objects.get(profile=profile)
+        context = {"user": profile.user, "profile": profile,
+                   "exist": True, "is_your_profile": is_your_profile,
+                   "genres": genres, "is_your_friend": is_your_friend,
+                   "is_receiver": is_receiver, "is_sender": is_sender}
+
     except Profile.DoesNotExist:
         context = {"exist": False}
     return render(request, 'profiles/profile.html', context)
@@ -104,11 +129,29 @@ def changeProfile(request):
 
     return render(request, 'profiles/change_profile.html', {'user_form': user_form, 'profile_form': profile_form, 'user': request.user})
 
+@login_required(login_url='login')
+def update_profile_preferences(request):
+    if request.method == 'POST':
+        pr_list = get_object_or_404(PreferenceList, profile=request.user.profile)
+
+        preference_form = PreferencesSetForm(request.POST, request.FILES,instance=pr_list)
+        if preference_form.is_valid():
+            preference_form.save()
+            messages.success(request, 'Your profile preferences have been updated successfully')
+            return redirect('../' + request.user.profile.slug)
+    else:
+        preference_form = PreferencesSetForm()
+    return render(request, 'profiles/change_preferences.html', {'preference_form': preference_form, 'user': request.user})
 @receiver(post_save, sender=User)
 def post_save_create_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
+        PreferenceList.objects.create(profile=instance.profile)
         FriendList.objects.create(profile=instance.profile)
+        Playlist.objects.create(title="Your favourite",
+                                author=instance.profile,
+                                playlist_thumbnail='playlist_pics/heart.jpeg',
+                                is_private=True)
 
 
 @receiver(post_save, sender=User)

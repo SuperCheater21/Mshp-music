@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %} Profile settings {% endblock title %}
+{% block title %} Preference settings {% endblock title %}
 {% block content %}
     <a href="../profile/{{ user.profile.slug }}"><img class="rounded-circle account-img" src="../../../media/{{ user.profile.image }} " style="cursor: pointer;"/> </a>
 
@@ -21,33 +21,14 @@
             <div class="form-row">
                 <div class="col-md-5">
                     <div class="form-group">
-                        <label class="small mb-1">Username:</label>
-                            {{ user_form.username }}
-                        <label class="small mb-1">Email:</label>
-                            {{ user_form.email }}
+                        <label class="small mb-1">Your favourite genres:</label> <br>
+                        {{ preference_form.genres }}
                     </div>
-                    <div class="form-group">
-                        <a href="{% url 'password_change' %}">Change Password</a>
-                        <hr>
-
-                        <label class="small mb-1">First name:</label>
-                        {{ profile_form.first_name }}
-
-                        <label class="small mb-1">Last name:</label>
-                        {{ profile_form.last_name }}
-
-                        <label class="small mb-1">Change Avatar:</label>
-                        {{ profile_form.image }}
-                    </div>
-                    <label class="small mb-1">Bio:</label> {{ profile_form.bio }}
                 </div>
             </div>
             <br><br>
             <button type="submit" class="btn btn-dark btn-lg">Save Changes</button>
             <button type="reset" class="btn btn-dark btn-lg">Reset</button>
-
-            <br> <br>
-            <button class="btn btn-dark btn-lg"><a href="./change/preference">Change Preferences</a></button>
         </form>
     </div>
 {% endblock content %}
