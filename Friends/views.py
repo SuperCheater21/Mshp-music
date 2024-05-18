@@ -29,29 +29,23 @@ def send_request(request,profile_id):
 
 @login_required(login_url='login')
 def accept_request(request,profile_id):
-    sender_user = request.user.profile
-    receiver_user = Profile.objects.get(slug=profile_id)
+    receiver_user = request.user.profile
+    sender_user = Profile.objects.get(slug=profile_id)
 
-    try:
-        friend_request = FriendRequest.objects.get(sender=sender_user,receiver=receiver_user)
-        friend_request.status = 'accepted'
-        friend_request.save()
-    except FriendRequest.DoesNotExist:
-        pass
+    friend_request = get_object_or_404(FriendRequest,  sender=sender_user,receiver=receiver_user)
+    friend_request.status = 'accepted'
+    friend_request.save()
 
     return HttpResponse(status=204)
 
 @login_required(login_url='login')
 def reject_request(request,profile_id):
-    sender_user = request.user.profile
-    receiver_user = Profile.objects.get(slug=profile_id)
+    receiver_user = request.user.profile
+    sender_user = Profile.objects.get(slug=profile_id)
 
-    try:
-        friend_request = FriendRequest.objects.get(sender=sender_user, receiver=receiver_user)
-        friend_request.status = 'rejected'
-        friend_request.save()
-    except FriendRequest.DoesNotExist:
-        pass
+    friend_request = get_object_or_404(FriendRequest,sender=sender_user, receiver=receiver_user)
+    friend_request.status = 'rejected'
+    friend_request.save()
 
     return HttpResponse(status=204)
 
