@@ -1,18 +1,21 @@
 from django.db import models
 from Genres.models import Genre
 from Users.models import Profile
+from Songs.models import Song
 from PIL import Image
 from Users.utils import get_random_code
 from django.template.defaultfilters import slugify
 #from django.core.urlresolvers import reverse
 
 class Playlist(models.Model):
-    title = models.CharField(max_length=250)
-    author = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    playlist_thumbnail = models.ImageField(default='playlist_pics/album.png', upload_to='playlist_pics')
-    genre = models.ForeignKey(Genre,on_delete=models.CASCADE)
+    title = models.CharField(max_length=50)
+    author = models.ForeignKey(Profile,default="Anonymous", on_delete=models.CASCADE)
+    playlist_thumbnail = models.ImageField(default='playlist_pics/album.png', upload_to='playlist_pics', blank=True)
+    genre = models.ForeignKey(Genre,on_delete=models.CASCADE, blank=True, null=True)
+    is_private = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now=True)
     last_updated = models.DateTimeField(auto_now_add=True, blank=True)
+    songs = models.ManyToManyField(Song,default=None)
 
     slug = models.SlugField(unique=True, blank=True)
 
