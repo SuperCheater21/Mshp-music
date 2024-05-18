@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'Users.apps.UsersConfig',
-    'Authors.apps.AuthorsConfig',
+    'Artists.apps.ArtistsConfig',
     'Playlists.apps.PlaylistsConfig',
     'Songs.apps.SongsConfig',
     'Friends.apps.FriendsConfig',
