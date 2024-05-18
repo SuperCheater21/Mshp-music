@@ -4,7 +4,7 @@ from .models import Song
 
 class SongUploadForm(forms.ModelForm):
     song_name = forms.CharField(max_length=50,  widget=forms.TextInput(attrs={'class': 'form-control'}))
-    thumbnail = forms.ImageField(widget=forms.FileInput(attrs={'class': 'form-control-file'}))
+    thumbnail = forms.ImageField(widget=forms.FileInput(attrs={'class': 'form-control-file'}), required=False)
     #audio_file =
     lyrics = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 5}))
 

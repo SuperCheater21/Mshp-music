@@ -24,17 +24,33 @@ def song_list(request):
     return render(request, 'music/song_list.html', {'songs': songs})
 
 @login_required(login_url='login')
-def play_song(request, song_id):
-    song = get_object_or_404(Song, pk=song_id)  # Get song by ID
-    first_element = Song.objects.order_by('id').first().id
-    last_element = Song.objects.order_by('id').last().id
-    next_element = song_id + 1 if song_id < last_element else first_element
-    prev_element = song_id - 1 if song_id > first_element else last_element
+def play_song_by_slug(request, song_id):
+    song = get_object_or_404(Song, slug=song_id)  # Get song by ID
+    context = {'song': song}
+    return render(request, 'play_song_by_slug.html', context)
+
+@login_required(login_url='login')
+def play_song_in_playlist(request,playlist_id, song_id):
+    playlist = get_object_or_404(Playlist, slug=playlist_id)
+
+    prev_element = song_id - 1
+    next_element = song_id + 1
+
+    if prev_element < 0:
+        prev_element = len(playlist.songs.all()) - 1
+    if next_element >= len(playlist.songs.all()):
+        next_element = 0
+
+    song = playlist.songs.all()[song_id]
+
     context = {'song': song,
-               'next_song_id': next_element,
-               'prev_song_id': prev_element,
-               }
-    return render(request, 'play_song.html', context)
+               'prev_song_id':prev_element,
+               'next_song_id':next_element}
+    return render(request, 'play_song_in_playlist.html', context)
+
+
+
+
 
 @login_required(login_url='login')
 def music_page(request):
@@ -52,14 +68,14 @@ def upload_song(request, playlist_id):
 
         if song_form.is_valid():
             new_song = song_form.save(commit=False)
+            playlist = Playlist.objects.get(slug=playlist_id)
+            new_song.save()  # Save the new song first
 
-
+            playlist.songs.add(new_song)
             new_song.artists.add(request.user.profile)
-            new_song.album = Playlist.objects.get(slug=playlist_id)
 
-            new_song.save()
             messages.success(request, 'This song is added successfully')
-            #return redirect('../profile/' + request.user.profile.slug)
+            return redirect('../play/' + new_song.id)
     else:
         song_form = SongUploadForm()
 
