@@ -1,18 +1,51 @@
 {% extends "base.html" %}
 
 
-{% block title %} Profile {% endblock %}
+{% block title %} Profile {% endblock title %}
 
-{% block block_head}
-<style>
-
-</style>
-{% endblock %}
+{% block block_head %}
+<link rel="stylesheet" type="text/css" href="../../static/style.css" />
+{% endblock block_head %}
 
 {% block content %}
+    <div class="entry">
+    {% if exist %}
+        <h1>Profile of {{user.username}}</h1>
+        <img class="rounded-circle account-img" src="../../../media/{{profile.image}}" alt="{{user.username}}'s profile picture" /> <br>
+        <p><b>Favourite genres:</b></p>
 
-    {% if user  != false %}
-    <h1>{{ user.</h1>
-    <img src="{{ user.image }}" alt="Your profile picture">
+        <ul>
+            {% for genre in genres.get_genres %}
+                <li> {{ genre }}</li>
+            {% endfor %}
+        </ul>
 
-{% endblock  %}
+        {% if is_your_profile %}
+            <button class="btn btn-dark btn-lg"><a href="../change">Change Your Profile</a> </button>
+        {% else %}
+            {% if is_your_friend %}
+                <button class="btn btn-dark btn-lg"><a href="delete">Delete Friend</a> </button>
+            {% else %}
+                {% if is_receiver %}
+                    <button class="btn btn-dark btn-lg"><a href="accept">Accept Friend Request</a> </button>
+                    <button class="btn btn-dark btn-lg"><a href="reject">Reject Friend Request</a> </button>
+                {% else %}
+                    {% if is_sender %}
+                         <button class="btn btn-dark btn-lg"><a href="reject">Delete Friend Request</a> </button>
+                    {% else %}
+                        <button class="btn btn-dark btn-lg"><a href="send">Add Friend</a> </button>
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+        {% endif %}
+
+        {% for message in messages %}
+					<p id="messages">{{ message }}</p>
+		{% endfor %}
+    {% else %}
+        <h1>Such profile does not exist</h1>
+    {% endif %}
+    </div>
+
+
+{% endblock content%}
