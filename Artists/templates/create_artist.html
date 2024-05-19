@@ -15,6 +15,19 @@
             </button>
         </div>
     {% endif %}
+
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li>{{ message }} </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+
+    {% if exist %}
+
+    {% else %}
     <div class="form-content">
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
@@ -22,22 +35,12 @@
                 <div class="col-md-5">
                     <div class="form-group">
 
-
-                        <label class="small mb-1">Song name:</label>
-                        {{ song_form.song_name }}
-
-
+                        <label class="small mb-1">Stage name:</label>
+                        {{ artist_form.stage_name }}
 
                     </div>
-                    <label class="small mb-1">Lyrics:</label> {{ song_form.lyrics }}
+                    <label class="small mb-1">Description:</label> {{ artist_form.description }}
                     <br>
-                    <div class="form-group">
-                        <label class="small mb-1">Thumbnail:</label>
-                        {{ song_form.thumbnail }}
-
-                        <label class="small mb-1">Audio file:</label>
-                        {{ song_form.audio_file }}
-                    </div>
                 </div>
             </div>
             <br><br>
@@ -45,4 +48,6 @@
             <button type="reset" class="btn btn-dark btn-lg">Reset</button>
         </form>
     </div>
+
+    {% endif %}
 {% endblock content %}

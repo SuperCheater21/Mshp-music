@@ -1,6 +1,7 @@
 from django.db import models
 from Genres.models import Genre
 from Users.models import Profile
+from Artists.models import Artist
 from Songs.models import Song
 from PIL import Image
 from Users.utils import get_random_code
@@ -10,6 +11,8 @@ from django.template.defaultfilters import slugify
 class Playlist(models.Model):
     title = models.CharField(max_length=50)
     author = models.ForeignKey(Profile,default="Anonymous", on_delete=models.CASCADE)
+
+    artist = models.ManyToManyField(Artist, blank=True)
     playlist_thumbnail = models.ImageField(default='playlist_pics/album.png', upload_to='playlist_pics', blank=True)
     genre = models.ForeignKey(Genre,on_delete=models.CASCADE, blank=True, null=True)
     is_private = models.BooleanField(default=False)

@@ -10,6 +10,7 @@ from django.contrib.auth import authenticate, login, logout
 
 from django.shortcuts import render, get_object_or_404
 from .models import Playlist
+from Artists.models import Artist
 from django.contrib.auth.decorators import login_required
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -25,7 +26,7 @@ def create_playlist(request):
             new_playlist= playlist_form.save(commit=False)
 
 
-            new_playlist.author = request.user.profile
+            new_playlist.author = get_object_or_404(Artist, profile=request.user.profile)
 
             new_playlist.save()
             messages.success(request, 'This playlist is created successfully')

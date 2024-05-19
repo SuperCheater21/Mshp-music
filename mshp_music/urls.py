@@ -25,6 +25,7 @@ from django.contrib.auth import views as a_views
 from django.urls import path
 from Users import views as Users_views
 from Songs import views as Songs_views
+from Artists import views as Artists_views
 from Friends import views as Friends_views
 from Playlists import views as Playlists_views
 from django.views.generic import RedirectView
@@ -71,7 +72,10 @@ urlpatterns = [
     path('playlist/<slug:playlist_id>/upload', Songs_views.upload_song, name='upload_song'),
     path('playlist/create', Playlists_views.create_playlist, name='create_playlist'),
     path('playlist/<slug:playlist_id>/play/<int:song_id>/', Songs_views.play_song_in_playlist, name='play_song_in_playlist'),
-    path('myvibe', Songs_views.my_vibe_page, name='my_vibe')
+    path('myvibe', Songs_views.my_vibe_page, name='my_vibe'),
+
+    path('artist/create', Artists_views.create_artist, name='create_artist'),
+    path('artist/<slug:artist_id>', Artists_views.artist_profile, name='artist_profile'),
 
 ]
 

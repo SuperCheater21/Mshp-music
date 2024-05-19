@@ -12,6 +12,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, get_object_or_404
 from .models import Song
 from Playlists.models import Playlist
+from Artists.models import Artist
 from .forms import SongUploadForm
 from django.contrib.auth.decorators import login_required
 from django.db.models.signals import post_save
@@ -72,7 +73,7 @@ def upload_song(request, playlist_id):
             new_song.save()  # Save the new song first
 
             playlist.songs.add(new_song)
-            new_song.artists.add(request.user.profile)
+            new_song.artists.add(get_object_or_404(Artist, profile=request.user.profile))
 
             messages.success(request, 'This song is added successfully')
             return redirect('../play/' + new_song.id)
