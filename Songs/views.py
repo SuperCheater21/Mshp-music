@@ -41,7 +41,7 @@ def play_song_in_playlist(request,playlist_id, song_id):
         prev_element = len(playlist.songs.all()) - 1
     if next_element >= len(playlist.songs.all()):
         next_element = 0
-
+    #print(playlist.songs.all())
     song = playlist.songs.all()[song_id]
 
     context = {'song': song,
@@ -76,7 +76,8 @@ def upload_song(request, playlist_id):
             new_song.artists.add(get_object_or_404(Artist, profile=request.user.profile))
 
             messages.success(request, 'This song is added successfully')
-            return redirect('../play/' + new_song.id)
+            song_id = len(playlist.songs.all()) - 1
+            return redirect('play/'  + str(song_id))
     else:
         song_form = SongUploadForm()
 

@@ -24,8 +24,8 @@ class UserUpdateForm(forms.ModelForm):
         fields = ['username', 'email']
 
 class ProfileUpdateForm(forms.ModelForm):
-    first_name = forms.CharField(max_length=200,  widget=forms.TextInput(attrs={'class': 'form-control'}))
-    last_name = forms.CharField(max_length=200, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    first_name = forms.CharField(max_length=200,  widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
+    last_name = forms.CharField(max_length=200, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
     image = forms.ImageField(widget=forms.FileInput(attrs={'class': 'form-control-file'}), required=False)
     bio = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 5}), required=False)
 

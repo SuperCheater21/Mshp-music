@@ -12,8 +12,8 @@ class Playlist(models.Model):
     title = models.CharField(max_length=50)
     author = models.ForeignKey(Profile,default="Anonymous", on_delete=models.CASCADE)
 
-    artist = models.ManyToManyField(Artist, blank=True)
-    playlist_thumbnail = models.ImageField(default='playlist_pics/album.png', upload_to='playlist_pics', blank=True)
+    #artists = models.ManyToManyField(Artist, blank=True)
+    playlist_thumbnail = models.ImageField(default='playlist_pics/album.png', upload_to='playlist_pics')
     genre = models.ForeignKey(Genre,on_delete=models.CASCADE, blank=True, null=True)
     is_private = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now=True)
@@ -42,11 +42,15 @@ class Playlist(models.Model):
         self.slug = to_slug
 
         # resizing images
-        img = Image.open(self.playlist_thumbnail.path)
+        super().save(*args, **kwargs)
+
+        # resizing images
+        img = Image.open(self.thumbnail.path)
 
         if img.height > 200 or img.width > 200:
             new_img = (200, 200)
             img.thumbnail(new_img)
-            img.save(self.playlist_thumbnail.path)
+            img.save(self.thumbnail.path)
 
         super().save(*args, **kwargs)
+

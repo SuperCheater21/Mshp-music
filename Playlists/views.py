@@ -11,6 +11,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, get_object_or_404
 from .models import Playlist
 from Artists.models import Artist
+from Users.models import Profile
+from Songs.models import Song
 from django.contrib.auth.decorators import login_required
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -26,7 +28,7 @@ def create_playlist(request):
             new_playlist= playlist_form.save(commit=False)
 
 
-            new_playlist.author = get_object_or_404(Artist, profile=request.user.profile)
+            new_playlist.author = request.user.profile
 
             new_playlist.save()
             messages.success(request, 'This playlist is created successfully')
@@ -36,4 +38,39 @@ def create_playlist(request):
 
     return render(request, 'create_playlist.html',
                   {'playlist_form': playlist_form})
+
+@login_required(login_url='login')
+
+
+@login_required(login_url='login')
+def playlist_page(request, playlist_id):
+    try:
+        playlist = Playlist.objects.get(slug=playlist_id)
+        profile = playlist.author
+
+
+
+
+        if profile.user == request.user:
+            is_your_playlist = True
+        else:
+            is_your_playlist = False
+
+
+        songs = playlist.songs.all();
+        temp = []
+
+        for song in songs:
+            for artist in song.artists.all():
+                temp.append(artist)
+
+        temp = set(temp)
+        artists = list(temp)
+        context = {"profile": profile, "playlist" : playlist, "artists" : artists,
+                   "exist": True, "is_your_playlist": is_your_playlist, "songs" : songs}
+
+    except Playlist.DoesNotExist:
+        context = {"exist": False}
+    return render(request, 'playlist_page.html', context)
+
 

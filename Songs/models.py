@@ -6,8 +6,8 @@ from PIL import Image
 class Song(models.Model):
     song_name = models.CharField(max_length=50)
     artists = models.ManyToManyField(Artist,default=None)
-    thumbnail = models.ImageField(upload_to='audio_files/images',
-                                      help_text=".jpg, .png, .jpeg, .gif, .svg supported", blank=True)
+    thumbnail = models.ImageField(upload_to='song_thumbnail',
+                                      help_text=".jpg, .png, .jpeg, .gif, .svg supported", default='song_thumbnail/thumbnail.png')
     audio_file = models.FileField(upload_to='audio_files', help_text=".mp3 only supported")
     lyrics = models.TextField(blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
@@ -34,6 +34,8 @@ class Song(models.Model):
             to_slug = str(self.song_name)
         self.slug = to_slug
 
+        super().save(*args, **kwargs)
+
         # resizing images
         img = Image.open(self.thumbnail.path)
 
@@ -43,3 +45,4 @@ class Song(models.Model):
             img.save(self.thumbnail.path)
 
         super().save(*args, **kwargs)
+

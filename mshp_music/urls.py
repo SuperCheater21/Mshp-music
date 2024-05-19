@@ -71,13 +71,15 @@ urlpatterns = [
     path('play/<slug:song_id>/', Songs_views.play_song_by_slug, name='play_song_by_slug'),
     path('playlist/<slug:playlist_id>/upload', Songs_views.upload_song, name='upload_song'),
     path('playlist/create', Playlists_views.create_playlist, name='create_playlist'),
+    path('playlist/<slug:playlist_id>', Playlists_views.playlist_page, name='playlist_page'),
     path('playlist/<slug:playlist_id>/play/<int:song_id>/', Songs_views.play_song_in_playlist, name='play_song_in_playlist'),
     path('myvibe', Songs_views.my_vibe_page, name='my_vibe'),
 
     path('artist/create', Artists_views.create_artist, name='create_artist'),
     path('artist/<slug:artist_id>', Artists_views.artist_profile, name='artist_profile'),
 
-]
+]  #+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
 
 
 if settings.DEBUG:

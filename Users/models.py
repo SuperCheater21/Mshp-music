@@ -35,14 +35,19 @@ class Profile(models.Model):
         self.slug = to_slug
 
         # resizing images
-        img = Image.open(self.image.path)
+        super().save(*args, **kwargs)
 
-        if img.height > 100 or img.width > 100:
-            new_img = (100, 100)
+        # resizing images
+        img = Image.open(self.thumbnail.path)
+
+        if img.height > 200 or img.width > 200:
+            new_img = (200, 200)
             img.thumbnail(new_img)
-            img.save(self.image.path)
+            img.save(self.thumbnail.path)
 
         super().save(*args, **kwargs)
+
+
 class PreferenceList(models.Model):
     profile = models.OneToOneField(Profile, on_delete=models.CASCADE)
     genres = models.ManyToManyField(Genre, default=None ,blank=True, null=True, related_name="genres")
