@@ -18,7 +18,7 @@ from django.shortcuts import get_object_or_404
 from Friends.models import FriendList, FriendRequest
 from Playlists.models import Playlist
 from .models import Profile, PreferenceList
-
+from django.db import IntegrityError
 
 def loginPage(request):
    # if request.user.is_authenticated:
@@ -54,10 +54,10 @@ def register(request):
             form.save()
 
 
-            user = form.cleaned_data.get('username')
+            username = form.cleaned_data.get('username')
 
 
-            messages.success(request, 'Account ' + user + ' was created')
+            messages.success(request, 'Account ' + username + ' was created')
 
             return redirect('login')
 
@@ -142,20 +142,25 @@ def update_profile_preferences(request):
     else:
         preference_form = PreferencesSetForm()
     return render(request, 'profiles/change_preferences.html', {'preference_form': preference_form, 'user': request.user})
+
 @receiver(post_save, sender=User)
 def post_save_create_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
-        PreferenceList.objects.create(profile=instance.profile)
+        prlist = PreferenceList.objects.create(profile=instance.profile)
         FriendList.objects.create(profile=instance.profile)
-        Playlist.objects.create(title="Your favourite",
-                                author=instance.profile,
-                                playlist_thumbnail='playlist_pics/heart.jpeg',
-                                is_private=True)
+        try:
+            Playlist.objects.create(title="Your favourite",
+                                    author=instance.profile,
+                                    playlist_thumbnail='playlist_pics/heart.jpeg',
+                                    is_private=True)
+        except IntegrityError:
+            pl = Playlist.objects.get(author=instance.profile)
+            prlist.playlists.add(pl)
+
+
 
 
 @receiver(post_save, sender=User)
 def save_profile(sender, instance, **kwargs):
     instance.profile.save()
-
-

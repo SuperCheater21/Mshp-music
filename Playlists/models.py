@@ -14,11 +14,15 @@ class Playlist(models.Model):
 
     #artists = models.ManyToManyField(Artist, blank=True)
     playlist_thumbnail = models.ImageField(default='playlist_pics/album.png', upload_to='playlist_pics')
+
     genre = models.ForeignKey(Genre,on_delete=models.CASCADE, blank=True, null=True)
+    songs = models.ManyToManyField(Song,default=None)
+
     is_private = models.BooleanField(default=False)
+
     created = models.DateTimeField(auto_now=True)
     last_updated = models.DateTimeField(auto_now_add=True, blank=True)
-    songs = models.ManyToManyField(Song,default=None)
+
 
     slug = models.SlugField(unique=True, blank=True)
 
@@ -31,15 +35,13 @@ class Playlist(models.Model):
 
         # creating slug
         ex = False
-        if self.title:
-            to_slug = slugify(str(self.title))
-            if len(Playlist.objects.filter(slug=to_slug).all()) > 1:
-                ex = True
-            while ex:
-                to_slug = slugify(to_slug + " " + str(get_random_code()))
-                ex = Playlist.objects.filter(slug=to_slug).exists()
-        else:
-            to_slug = str(self.user)
+
+        to_slug = slugify(str(self.title))
+        ex = Playlist.objects.filter(slug=to_slug).exists()
+        while ex:
+            to_slug = slugify(to_slug + " " + str(get_random_code()))
+            ex = Playlist.objects.filter(slug=to_slug).exists()
+
         self.slug = to_slug
 
         # resizing images

@@ -23,15 +23,12 @@ class Artist(models.Model):
 
         # creating slug
         ex = False
-        if self.stage_name:
-            to_slug = slugify(str(self.stage_name))
-            if len(Artist.objects.filter(slug=to_slug).all()) > 1:
-                ex = True
-            while ex:
-                to_slug = slugify(to_slug + " " + str(get_random_code()))
-                ex = Artist.objects.filter(slug=to_slug).exists()
-        else:
-            to_slug = str(self.stage_name)
+        to_slug = slugify(str(self.stage_name))
+        ex = Artist.objects.filter(slug=to_slug).exists()
+        while ex:
+            to_slug = slugify(to_slug + " " + str(get_random_code()))
+            ex = Artist.objects.filter(slug=to_slug).exists()
+
         self.slug = to_slug
 
         super().save(*args, **kwargs)

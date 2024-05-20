@@ -35,29 +35,31 @@ class Profile(models.Model):
         self.slug = to_slug
 
         # resizing images
-        super().save(*args, **kwargs)
+        img = Image.open(self.image.path)
 
-        # resizing images
-        img = Image.open(self.thumbnail.path)
-
-        if img.height > 200 or img.width > 200:
+        if img.height > 200 or img.width > 120:
             new_img = (200, 200)
             img.thumbnail(new_img)
-            img.save(self.thumbnail.path)
+            img.save(self.image.path)
 
         super().save(*args, **kwargs)
 
-
+from Playlists.models import Playlist
+from Artists.models import Artist
 class PreferenceList(models.Model):
     profile = models.OneToOneField(Profile, on_delete=models.CASCADE)
-    genres = models.ManyToManyField(Genre, default=None ,blank=True, null=True, related_name="genres")
 
+    genres = models.ManyToManyField(Genre, default=None ,blank=True, null=True, related_name="genres")
+    playlists = models.ManyToManyField(Playlist, default=None, blank=True, null=True, related_name="playlists")
+    artists = models.ManyToManyField(Artist, default=None, blank=True, null=True, related_name="artists")
 
     def str(self):
         return self.profile.user.username
 
     def get_genres(self):
         return self.genres.all()
+
+
 
     def count_genres(self):
         return self.genres.all().count()

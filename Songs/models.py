@@ -24,15 +24,11 @@ class Song(models.Model):
 
         # creating slug
         ex = False
-        if self.song_name:
-            to_slug = slugify(str(self.song_name))
-            if len(Song.objects.filter(slug=to_slug).all()) > 1:
-                ex = True
-            while ex:
-                to_slug = slugify(to_slug + " " + str(get_random_code()))
-                ex = Song.objects.filter(slug=to_slug).exists()
-        else:
-            to_slug = str(self.song_name)
+        to_slug = slugify(str(self.song_name))
+        ex = Song.objects.filter(slug=to_slug).exists()
+        while ex:
+            to_slug = slugify(to_slug + " " + str(get_random_code()))
+            ex = Song.objects.filter(slug=to_slug).exists()
         self.slug = to_slug
 
         super().save(*args, **kwargs)
