@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'Friends.apps.FriendsConfig',
     'Genres.apps.GenresConfig',
     'mshp_music',
+    'bootstrap5',
 ]
 
 #AUTH_USER_MODEL = 'mshp_music.User'
