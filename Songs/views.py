@@ -13,7 +13,7 @@ from django.shortcuts import render, get_object_or_404
 from .models import Song
 from Playlists.models import Playlist
 from Artists.models import Artist
-from .forms import SongUploadForm
+from .forms import SongForm
 from django.contrib.auth.decorators import login_required
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -26,9 +26,22 @@ def song_list(request):
 
 @login_required(login_url='login')
 def play_song_by_slug(request, song_id):
-    song = get_object_or_404(Song, slug=song_id)  # Get song by ID
-    context = {'song': song}
-    return render(request, 'play_song_by_slug.html', context)
+    try:
+        song = Song.objects.get(slug=song_id)  # Get song by ID
+        artist = Artist.objects.filter(profile=request.user.profile)
+
+        is_your_song = False
+        print(artist, song.artists.all())
+        if artist.exists():
+            if artist[0] in song.artists.all():
+                is_your_song = True
+
+
+        context = {'song': song, 'is_your_song':  is_your_song}
+        return render(request, 'play_song_by_slug.html', context)
+    except Song.DoesNotExist:
+        return render(request, 'not_found.html', {'what': 'song'})
+
 
 @login_required(login_url='login')
 def play_song_in_playlist(request,playlist_id, song_id):
@@ -65,7 +78,7 @@ def my_vibe_page(request):
 @login_required(login_url='login')
 def upload_song(request, playlist_id):
     if request.method == 'POST':
-        song_form = SongUploadForm(request.POST,request.FILES)
+        song_form = SongForm(request.POST,request.FILES)
 
         if song_form.is_valid():
             new_song = song_form.save(commit=False)
@@ -79,10 +92,41 @@ def upload_song(request, playlist_id):
             song_id = len(playlist.songs.all()) - 1
             return redirect('play/'  + str(song_id))
     else:
-        song_form = SongUploadForm()
+        song_form = SongForm()
 
     return render(request, 'upload_song.html',
                   {'song_form': song_form})
 
+@login_required(login_url='login')
+def change_song(request, song_id):
+    try:
+        song_form = SongForm(request.POST, request.FILES, instance=Song.objects.get(slug=song_id))
+        if request.method == 'POST':
+
+
+            if song_form.is_valid():
+                song_form.save()
+                messages.success(request, 'This song has been changed successfully')
+                return redirect('play/' + song_id)
+        else:
+            song_form = SongForm()
+
+        return render(request, 'upload_song.html',
+                  {'song_form': song_form})
+    except Song.DoesNotExist:
+        return render(request, 'not_found.html', {'what': 'song'})
+
+
+
+@login_required(login_url='login')
+def delete_song(request, song_id):
+    try:
+        song = Song.objects.get(slug= song_id)
+        song.delete()
+
+        messages.success(request, 'This song has been deleted successfully')
+        return redirect(request.path_info)
+    except Song.DoesNotExist:
+        return render(request, 'not_found.html', {'what': 'song'})
 
 

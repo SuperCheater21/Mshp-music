@@ -26,7 +26,8 @@ class Song(models.Model):
         ex = False
         if self.song_name:
             to_slug = slugify(str(self.song_name))
-            ex = Song.objects.filter(slug=to_slug).exists()
+            if len(Song.objects.filter(slug=to_slug).all()) > 1:
+                ex = True
             while ex:
                 to_slug = slugify(to_slug + " " + str(get_random_code()))
                 ex = Song.objects.filter(slug=to_slug).exists()

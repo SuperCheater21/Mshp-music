@@ -25,7 +25,7 @@ def send_request(request,profile_id):
 
     friend_request = FriendRequest.objects.get_or_create(sender=sender_user,receiver=receiver_user)
 
-    return HttpResponse(status=204)
+    return redirect(request.path_info)
 
 @login_required(login_url='login')
 def accept_request(request,profile_id):
@@ -36,7 +36,7 @@ def accept_request(request,profile_id):
     friend_request.status = 'accepted'
     friend_request.save()
 
-    return HttpResponse(status=204)
+    return redirect(request.path_info)
 
 @login_required(login_url='login')
 def reject_request(request,profile_id):
@@ -47,7 +47,7 @@ def reject_request(request,profile_id):
     friend_request.status = 'rejected'
     friend_request.save()
 
-    return HttpResponse(status=204)
+    return redirect(request.path_info)
 
 
 @login_required(login_url='login')
@@ -63,7 +63,7 @@ def delete_friend(request,profile_id):
     target_profile.save()
     user_friend_list.save()
 
-    return HttpResponse(status=204)
+    return redirect(request.path_info)
 
 @receiver(post_save, sender=FriendRequest)
 def post_save_interaction_with_friend_request(sender, instance, created, **kwargs):

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %} Upload song {% endblock title %}
+{% block title %} Create artist {% endblock title %}
 
 {% block content %}
 
@@ -26,7 +26,7 @@
 
 
     {% if exist %}
-
+        <h1>YOU ARE ALREADY ARTIST!</h1>
     {% else %}
     <div class="form-content">
         <form method="post" enctype="multipart/form-data">

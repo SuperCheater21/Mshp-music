@@ -3,15 +3,6 @@
 
 {% block title %} Playlist {% endblock title %}
 
-{% block block_head %}
-
-<script>
-    Handlebars.registerHelper('counter', function() {
-     this.counter = this.counter || 0;
-        return this.counter++;
-     });
-</script>
-{% endblock block_head %}
 
 {% block content %}
     <div class="entry">
@@ -24,7 +15,7 @@
 
         <ul>
             {% for artist in artists %}
-                <li><a href="/artist/{{this.slug}}" style="color:black;"> {{ artist }}</a></li>
+                <li><a href="{% url 'artist_profile' artist.slug %}"" style="color:black;"> {{ artist }}</a></li>
             {% endfor %}
         </ul>
 
@@ -33,14 +24,15 @@
         <p><b>Songs:</b></p>
         <ul>
             {% for song in songs %}
-                <li> <a href="play" style="color:black;">{{ song.song_name }}</a> </li>
+                <li> <a href="{% url 'play_song_by_slug' song.slug %}"  style="color:black;">{{ song.song_name }}</a> </li>
             {% endfor %}
         </ul>  <br>
 
         {% if is_your_playlist %}
-            <button class="btn btn-dark btn-lg"><a href="../change">Change Your Playlist</a> </button>
+            <button class="btn btn-dark btn-lg"><a href="{% url 'change_playlist' playlist.slug %}">Change</a> </button>
+            <button class="btn btn-dark btn-lg"><a href="{% url 'delete_playlist' playlist.slug %}">Delete</a> </button>
         {% else %}
-            <button class="btn btn-dark btn-lg"><a href="/like">Like</a> </button>
+            <button class="btn btn-dark btn-lg"><a href="...">Like</a> </button>
         {% endif %}
 
         {% for message in messages %}

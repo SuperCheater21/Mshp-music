@@ -12,16 +12,17 @@
     {% if exist %}
         <h1>Profile of {{artist.stage_name}}</h1>
         <img class="rounded-circle account-img" src="../../media/{{user.profile.image}}" alt="{{user.username}}'s profile picture" /> <br>
-        <p><b>Songs:</b></p>
 
+        <p><b>Songs:</b></p>
         <ul>
             {% for song in songs %}
-                <li> {{ song }}</li>
+                <li> <a href="/play/{{song.slug}}" style="color:black;">{{ song.song_name }}</a> </li>
             {% endfor %}
-        </ul>
+        </ul> <br>
 
         {% if is_your_profile %}
-            <button class="btn btn-dark btn-lg"><a href="../change">Change Your Profile</a> </button>
+            <button class="btn btn-dark btn-lg"><a href="{% url 'artist_change'  %}">Change</a> </button>
+            <button class="btn btn-dark btn-lg"><a href="{% url 'artist_delete' %}">Delete</a> </button>
         {% else %}
             <button class="btn btn-dark btn-lg"><a href="/follow">Follow</a> </button>
         {% endif %}

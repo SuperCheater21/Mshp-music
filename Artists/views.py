@@ -18,22 +18,23 @@ from django.dispatch import receiver
 from django.http import Http404, HttpResponse, HttpResponseForbidden
 from django.dispatch import receiver
 from django.http import HttpResponse
-from .forms import ArtistCreationForm
+from .forms import ArtistForm
 
 
 @login_required(login_url="login")
 def create_artist(request):
-    exist = False
+    artist = Artist.objects.filter(profile=request.user.profile)
+    if artist.exists():
+        #messages.error(request, 'Artist already exists')
+
+        return render(request, 'create_artist.html',
+                      {'exist': True, 'artist': artist})
+
     if request.method == 'POST':
-        artist = Artist.objects.filter(profile=request.user.profile)
-        if artist.exists():
-            messages.error(request, 'Artist already exists')
-
-            return render(request, 'create_artist.html',
-                          {'exist' : True, 'artist' : artist})
 
 
-        artist_form = ArtistCreationForm(request.POST,request.FILES)
+
+        artist_form = ArtistForm(request.POST,request.FILES)
 
         if artist_form.is_valid():
             new_artist = artist_form.save(commit=False)
@@ -42,12 +43,12 @@ def create_artist(request):
             new_artist.save()  # Save the new song first
 
             #messages.success(request, 'Artis has been created successfully')
-            return redirect('../artist/' + new_artist.slug)
+            return redirect('/artist/' + new_artist.slug)
     else:
-        artist_form = ArtistCreationForm()
+        artist_form = ArtistForm()
 
     return render(request, 'create_artist.html',
-                  {'artist_form': artist_form, 'exist' : exist })
+                  {'artist_form': artist_form, 'exist' : False })
 
 @login_required(login_url="login")
 def artist_profile(request, artist_id):
@@ -70,6 +71,7 @@ def artist_profile(request, artist_id):
                 if field == artist:
                     songs.append(instance)
                     break
+        #print(songs)
 
         context = {"user": profile.user, "artist": artist,
                    "exist": True, "is_your_profile": is_your_profile,
@@ -78,3 +80,39 @@ def artist_profile(request, artist_id):
     except Artist.DoesNotExist:
         context = {"exist": False}
     return render(request, 'artist_profile.html', context)
+
+
+@login_required(login_url='login')
+def artist_change(request):
+    try:
+        artist = Artist.objects.get(profile=request.user.profile)
+        artist_form = ArtistForm(request.POST, request.FILES, instance=artist)
+
+        if request.method == 'POST':
+
+
+            if artist_form.is_valid():
+                artist_form.save()
+                messages.success(request, 'This artist has been changed successfully')
+                return redirect('/artist/' + artist.slug)
+        else:
+            artist_form = ArtistForm()
+
+        return render(request, 'create_artist.html',
+                  {'artist_form': artist_form, 'exist': False})
+    except Artist.DoesNotExist:
+        return render(request, 'not_found.html', {'what': 'artist'})
+
+
+
+@login_required(login_url='login')
+def artist_delete(request):
+    try:
+        artist = Artist.objects.get(profile=request.user.profile)
+        artist.delete()
+
+        messages.success(request, 'This artist has been deleted successfully')
+        return redirect(request.path_info)
+    except Artist.DoesNotExist:
+        return render(request, 'not_found.html', {'what': 'artist'})
+

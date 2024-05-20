@@ -25,7 +25,8 @@ class Artist(models.Model):
         ex = False
         if self.stage_name:
             to_slug = slugify(str(self.stage_name))
-            ex = Artist.objects.filter(slug=to_slug).exists()
+            if len(Artist.objects.filter(slug=to_slug).all()) > 1:
+                ex = True
             while ex:
                 to_slug = slugify(to_slug + " " + str(get_random_code()))
                 ex = Artist.objects.filter(slug=to_slug).exists()

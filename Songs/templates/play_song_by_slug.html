@@ -18,6 +18,13 @@
       Your browser does not support the audio element.
     </audio>
 
+    {% if is_your_song %}
+            <button class="btn btn-dark btn-lg"><a href="{% url 'change_song' song.slug %}">Change</a> </button>
+            <button class="btn btn-dark btn-lg"><a href="{% url 'delete_song' song.slug %}">Delete</a> </button>
+    {% else %}
+            <button class="btn btn-dark btn-lg"><a href="...">Like</a> </button>
+    {% endif %}
+
     <hr>
     <h2>Lyrics:</h2>
     <pre>{{song.lyrics}}</pre>

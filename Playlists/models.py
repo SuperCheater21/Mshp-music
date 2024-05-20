@@ -33,7 +33,8 @@ class Playlist(models.Model):
         ex = False
         if self.title:
             to_slug = slugify(str(self.title))
-            ex = Playlist.objects.filter(slug=to_slug).exists()
+            if len(Playlist.objects.filter(slug=to_slug).all()) > 1:
+                ex = True
             while ex:
                 to_slug = slugify(to_slug + " " + str(get_random_code()))
                 ex = Playlist.objects.filter(slug=to_slug).exists()
@@ -45,12 +46,12 @@ class Playlist(models.Model):
         super().save(*args, **kwargs)
 
         # resizing images
-        img = Image.open(self.thumbnail.path)
+        img = Image.open(self.playlist_thumbnail.path)
 
         if img.height > 200 or img.width > 200:
             new_img = (200, 200)
             img.thumbnail(new_img)
-            img.save(self.thumbnail.path)
+            img.save(self.playlist_thumbnail.path)
 
         super().save(*args, **kwargs)
 
