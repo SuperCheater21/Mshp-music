@@ -27,6 +27,7 @@ from Users import views as Users_views
 from Songs import views as Songs_views
 from Artists import views as Artists_views
 from Friends import views as Friends_views
+from Genres import views as Genres_views
 from Playlists import views as Playlists_views
 from django.views.generic import RedirectView
 from django.http import HttpResponse
@@ -73,9 +74,12 @@ urlpatterns = [
     path('myvibe', Songs_views.my_vibe_page, name='my_vibe'),
     path('song/<slug:song_id>/change', Songs_views.change_song, name='change_song'),
     path('song/<slug:song_id>/delete', Songs_views.delete_song, name='delete_song'),
+    #path('song/<slug:song_id>/like', Songs_views.like_song, name='like_song'),
 
     path('playlist/<slug:playlist_id>/upload', Songs_views.upload_song, name='upload_song'),
     path('playlist/create', Playlists_views.create_playlist, name='create_playlist'),
+    path('playlist/<slug:playlist_id>/like', Playlists_views.like_playlist, name='like_playlist'),
+    path('playlist/<slug:playlist_id>/unlike', Playlists_views.unlike_playlist, name='unlike_playlist'),
     path('playlist/<slug:playlist_id>/change', Playlists_views.change_playlist, name='change_playlist'),
     path('playlist/<slug:playlist_id>/delete', Playlists_views.delete_playlist, name='delete_playlist'),
     path('playlist/<slug:playlist_id>', Playlists_views.playlist_page, name='playlist_page'),
@@ -83,8 +87,12 @@ urlpatterns = [
 
     path('artist/create', Artists_views.create_artist, name='create_artist'),
     path('artist/<slug:artist_id>/', Artists_views.artist_profile, name='artist_profile'),
+    path('artist/<slug:artist_id>/follow', Artists_views.follow_artist, name='follow_artist'),
+    path('artist/<slug:artist_id>/unfollow', Artists_views.unfollow_artist, name='unfollow_artist'),
     path('artist/change', Artists_views.artist_change, name='artist_change'),
     path('artist/delete', Artists_views.artist_delete, name='artist_delete'),
+
+    path('genre/create', Genres_views.create_genre, name='create_genre'),
 
 ]  + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
