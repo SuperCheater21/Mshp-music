@@ -150,7 +150,7 @@ def change_song(request, song_id):
             if song_form.is_valid():
                 song_form.save()
                 messages.success(request, 'This song has been changed successfully')
-                return redirect('play/' + song_id)
+                return redirect('song/'  + str(song_id))
         else:
             song_form = SongForm()
 
