@@ -1,5 +1,12 @@
 {% extends "base.html" %}
 {% block title %} Playing {{song.artist}} - {{song.title}} {% endblock title %}
+<head>
+    {% load bootstrap5 %}
+  {% bootstrap_css %}
+  {% bootstrap_javascript %}
+</head>
+
+
 
 {% block content %}
     <a href="../..">Song list</a>

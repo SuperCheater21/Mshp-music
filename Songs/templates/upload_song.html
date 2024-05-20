@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% block title %} Upload song {% endblock title %}
-
+<head>
+    {% load bootstrap5 %}
+  {% bootstrap_css %}
+  {% bootstrap_javascript %}
+</head>
 {% block content %}
 
     {% if song_form.errors %}
