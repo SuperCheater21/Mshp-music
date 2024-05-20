@@ -30,3 +30,8 @@ def play_song(request, song_id):
                }
     return render(request, 'play_song.html', context)
 
+def music_page(request):
+    song = Song(title='Paranoid Android', artist='Radiohead')
+    song.save()
+    context = {'song': song}
+    return render(request, 'music_page.html', context)

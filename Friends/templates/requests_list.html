@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+
+{% block title %}Request list{% endblock %}
+
+{% block block_head %}
+<style>
+
+
+#fb{
+  width:500px;
+  border:1px solid gray;
+  border-radius:5px;
+  position:relative;
+  height:175px;
+}
+
+a {
+  text-decoration: none;
+  color:white;
+}
+
+#fb p{
+  font-family:sans-serif;
+  margin: 0 0 0 10px;
+  line-height:30px;
+}
+
+#fb-top span{
+  color:#4267B2;
+  float:right;
+  margin-right:10px;
+}
+#fb-top{
+  background-color:#efefef;
+  height:30px;
+  width:500px;
+  border-radius:5px 5px 0 0;
+  position:absolute;
+  top:-1px;
+  left:-1px;
+  border:1px solid gray;
+}
+
+#fb img{
+  position:absolute;
+  left:10px;
+  top:52.5px;
+}
+
+#info{
+  position:absolute;
+  left:120px;
+  top:75px;
+}
+
+#info {
+  color:#4267B2;
+  line-height:25px;
+  font-size:18px;
+}
+
+#info span{
+  color:#777;
+  font-size:14px;
+}
+
+#button-block{
+  position:absolute;
+  right:10px;
+  top:85px;
+}
+
+#button-block div{
+  display:inline-block;
+}
+
+#confirm, #delete{
+  background-color:#4267B2;
+  padding:7px;
+  border-radius:2px;
+  margin-right:10px;
+  font-family:sans-serif;
+}
+
+
+
+#delete{
+  color:#222;
+  background-color:#bbb;
+  border:1px solid #999;
+  padding:6px;
+  margin-right:0;
+}
+
+#button-block div:hover{
+  opacity:.8;
+  cursor:pointer;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+    <h3>YOUR RECEIVED FRIEND REQUESTS LIST</h3>
+    {% for request in received  %}
+    <div id="fb">
+        <div id="fb-top">
+            <p><b>Friend Requests</b><span>Find Friends</span></p>
+        </div>
+        <img class="rounded-circle account-img" src="../../../media/{{request.sender.image}}" height="100" width="100" alt="{{this.sender.user.username}}'s profile picture" /> <br>
+
+        <p id="info"><b>{{ request.sender.user.username }}</b> <br> <span></p>
+        <div id="button-block">
+
+        <div id="confirm"><a  href="../../profile/{{ request.sender.slug }}/accept">Confirm</a></div>
+        <div id="delete"><a  href="../../profile/{{ request.sender.slug }}/reject">Regect Request</a></div>
+        </div>
+    </div>
+    {% endfor %}
+    <br>
+
+    <h3>YOUR SENT FRIEND REQUESTS LIST</h3>
+    {% for request in sent %}
+    <div id="fb">
+        <div id="fb-top">
+            <p><b>Friend Requests</b><span>Find Friends</span></p>
+        </div>
+        <img class="rounded-circle account-img" src="../../../media/{{request.receiver.image}}" height="100" width="100" alt="{{this.sender.user.username}}'s profile picture" /> <br>
+
+        <p id="info"><b>{{ request.receiver.user.username }}</b> <br> <span></p>
+        <div id="button-block">
+            <div id="delete"><a href="../../profile/{{ request.receiver.slug }}/reject">Delete Request</a></div>
+        </div>
+    </div>
+    {% endfor %}
+
+
+{% endblock %}

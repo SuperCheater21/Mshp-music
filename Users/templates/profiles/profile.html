@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+
+{% block title %} Profile {% endblock title %}
+
+{% block block_head %}
+<link rel="stylesheet" type="text/css" href="style.css" />
+{% endblock block_head %}
+
+{% block content %}
+    <div class="entry">
+    {% if exist %}
+        <h1>Profile of {{user.username}}</h1>
+        <img class="rounded-circle account-img" src="../../../media/{{profile.image}}" alt="{{user.username}}'s profile picture" /> <br>
+
+        {% if is_your_profile %}
+            <button class="button-85"><a href="../change">Change your profile</a> </button>
+        {% else %}
+            <button class="button-85"><a href="send">Add friend</a> </button>
+        {% endif %}
+
+        {% for message in messages %}
+					<p id="messages">{{ message }}</p>
+		{% endfor %}
+    {% else %}
+        <h1>Such profile does not exist</h1>
+    {% endif %}
+    </div>
+
+
+{% endblock content%}

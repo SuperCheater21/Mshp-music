@@ -39,11 +39,13 @@ INSTALLED_APPS = [
     'Users.apps.UsersConfig',
     'Authors.apps.AuthorsConfig',
     'Playlists.apps.PlaylistsConfig',
-    # 'Songs.apps.SongsConfig',
-    'Songs',
+    'Songs.apps.SongsConfig',
+    'Friends.apps.FriendsConfig',
+    'Genres.apps.GenresConfig',
     'mshp_music',
-    'bootstrap5'
 ]
+
+#AUTH_USER_MODEL = 'mshp_music.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -76,7 +78,6 @@ TEMPLATES = [
 ]
 
 STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 MEDIA_URL = 'media/audio_files/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/audio_files/')
 
@@ -128,3 +129,17 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'dima.leonov.200814@gmail.com'
+EMAIL_HOST_PASSWORD = 'gyxkilbsepyrkxku'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')

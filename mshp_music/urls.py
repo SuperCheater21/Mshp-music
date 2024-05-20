@@ -18,45 +18,58 @@ from mshp_music import settings
 
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path
-
-from django.urls import path
+from django.conf import settings
+from django.conf.urls import include
+from django.conf.urls.static import static
 from django.contrib.auth import views as a_views
+from django.urls import path
 from Users import views as Users_views
 from Songs import views as Songs_views
+from Friends import views as Friends_views
+from django.views.generic import RedirectView
+from django.http import HttpResponse
+from django.contrib.staticfiles.storage import staticfiles_storage
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-
+    #path('',)
     path('login', Users_views.loginPage, name='login'),
     path('register', Users_views.register, name='register'),
     path('logout', Users_views.logoutPage, name='logout'),
+    path('profile/<slug:profile_id>/', Users_views.profilePage, name='profile'),
+    path('profile/<slug:profile_id>/send',Friends_views.send_request, name='send_friend_request'),
+    path('profile/<slug:profile_id>/reject',Friends_views.reject_request, name='reject_friend_request'),
+    path('profile/<slug:profile_id>/accept',Friends_views.accept_request, name='accept_friend_request'),
+    path('profile/<slug:profile_id>/delete',Friends_views.delete_friend, name='delete_friend'),
+    path('profile/change', Users_views.changeProfile),
 
-    path('reset_password/',
-         a_views.PasswordResetView.as_view(template_name="password_reset.html"),
-         name="reset_password"
-         ),
+    path('friend/list', Friends_views.show_list),
+    path('friend/requests', Friends_views.show_requests),
 
-    path('reset_password_sent/',
-         a_views.PasswordResetDoneView.as_view(template_name="password_reset_sent.html"),
-         name="password_reset_done"
-         ),
+    # Password reset links (ref: https://github.com/django/django/blob/master/django/contrib/auth/views.py)
+    path('password_change_done/',
+         a_views.PasswordChangeDoneView.as_view(template_name='password_reset/password_change_done.html'),
+         name='password_change_done'),
 
-    path('reset/<uidb64>/<token>/',
-         a_views.PasswordResetConfirmView.as_view(template_name="password_reset_form.html"),
-         name="password_reset_confirm"
-         ),
+    path('password_change/', a_views.PasswordChangeView.as_view(template_name='password_reset/password_change.html'),
+         name='password_change'),
 
-    path('reset_password_complete/',
-         a_views.PasswordResetCompleteView.as_view(template_name="password_reset_done.html"),
-         name="password_reset_complete"
-         ),
+    path('password_reset_done/',
+         a_views.PasswordResetDoneView.as_view(template_name='password_reset/password_reset_done.html'),
+         name='password_reset_done'),
 
-    #path('music', Songs_views.music_page, name='music'),
+    path('reset/<uidb64>/<token>/', a_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('password_reset/', a_views.PasswordResetView.as_view(), name='password_reset'),
+
+    path('password_reset_complete/',
+         a_views.PasswordResetCompleteView.as_view(template_name='password_reset/password_reset_complete.html'),
+         name='password_reset_complete'),
     path('', Songs_views.song_list, name='song_list'),
     path('play/<int:song_id>/', Songs_views.play_song, name='play_song')
 
+
 ]
+
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
