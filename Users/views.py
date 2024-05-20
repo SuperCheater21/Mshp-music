@@ -21,8 +21,8 @@ from .models import Profile, PreferenceList
 from django.db import IntegrityError
 
 def loginPage(request):
-   # if request.user.is_authenticated:
-        ##return redirect('index')
+    if request.user.is_authenticated:
+        return redirect('../')
 
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -32,7 +32,9 @@ def loginPage(request):
 
         if user is not None:
             login(request, user)
-            ##return redirect('index')
+
+
+            return redirect('../')
         else:
             messages.info(request, 'USERNAME or PASSWORD is incorrect')
 
@@ -43,8 +45,8 @@ def loginPage(request):
 
 
 def register(request):
-    #if request.user.is_authenticated:
-        #return redirect('index')
+    if request.user.is_authenticated:
+        return redirect('../')
 
     form = UserRegisterForm()
 
@@ -164,3 +166,40 @@ def post_save_create_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def save_profile(sender, instance, **kwargs):
     instance.profile.save()
+
+@login_required(login_url='login')
+def show_profile_preferences_artists(request, profile_id):
+    try:
+        profile = Profile.object.get(slug=profile_id)
+        prlist = profile.preferencelist #PreferenceList.objects.get(profile=profile)
+
+        if profile == request.user.profile:
+            is_your_profile = True
+        else:
+            is_your_profile = False
+
+        return render(request, 'profiles/show_artist_preferences.html',
+                      {"artists":prlist.get_artist(), "is_your_profile":is_your_profile})
+    except Profile.DoesNotExist:
+        return render(request, 'not_found.html', {'what': 'profile'})
+
+
+@login_required(login_url='login')
+def show_profile_preferences_playlists(request, profile_id):
+    try:
+        profile = Profile.object.get(slug=profile_id)
+        prlist = profile.preferencelist  # PreferenceList.objects.get(profile=profile)
+
+        if profile == request.user.profile:
+            is_your_profile = True
+        else:
+            is_your_profile = False
+
+        return render(request, 'profiles/show_playlists_preferences.html',
+                      {"playlists": prlist.get_playlists(), "is_your_profile": is_your_profile})
+    except Profile.DoesNotExist:
+        return render(request, 'not_found.html', {'what': 'profile'})
+
+#@receiver(post_save, sender=User)
+def mainPage(request):
+    return render(request, 'main.html')

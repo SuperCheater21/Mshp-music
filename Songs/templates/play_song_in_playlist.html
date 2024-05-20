@@ -6,7 +6,7 @@
     <title>Playing {{song.artist}} - {{song.title}}</title>
 </head>
 <body>
-    <a href="../..">Song list</a>
+    <a href="{% url 'playlist_page' playlist.slug %}">Song list</a>
     <hr>
     <h1>{{ song.title }}</h1>
     <h2>{{ song.artist }}</h2>

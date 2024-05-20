@@ -13,18 +13,24 @@
         <h1>Profile of {{artist.stage_name}}</h1>
         <img class="rounded-circle account-img" src="../../media/{{user.profile.image}}" alt="{{user.username}}'s profile picture" /> <br>
 
+        {% if songs_num > 0 %}
         <p><b>Songs:</b></p>
         <ul>
             {% for song in songs %}
                 <li> <a href="/play/{{song.slug}}" style="color:black;">{{ song.song_name }}</a> </li>
             {% endfor %}
         </ul> <br>
+        {% endif %}
 
         {% if is_your_profile %}
             <button class="btn btn-dark btn-lg"><a href="{% url 'artist_change'  %}">Change</a> </button>
             <button class="btn btn-dark btn-lg"><a href="{% url 'artist_delete' %}">Delete</a> </button>
         {% else %}
-            <button class="btn btn-dark btn-lg"><a href="/follow">Follow</a> </button>
+            {% if you_are_follower %}
+                <button class="btn btn-dark btn-lg"><a href="{% url 'unfollow_artist' artist.slug %}">Unfollow</a> </button>
+            {% else %}
+                <button class="btn btn-dark btn-lg"><a href="{% url 'follow_artist' artist.slug %}">Follow</a> </button>
+            {% endif %}
         {% endif %}
         {% for message in messages %}
 					<p id="messages">{{ message }}</p>

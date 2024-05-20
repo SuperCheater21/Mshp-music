@@ -1,6 +1,7 @@
 from django.db import models
 from Artists.models import Artist
 from Users.utils import get_random_code
+from Genres.models import Genre
 from django.template.defaultfilters import slugify
 from PIL import Image
 class Song(models.Model):
@@ -12,6 +13,7 @@ class Song(models.Model):
     lyrics = models.TextField(blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField( auto_now=True)
+    genre = models.ForeignKey(Genre,on_delete=models.CASCADE, blank=True, null=True)
     #duration = models.CharField(max_length=20)
 
     slug = models.SlugField(unique=True, blank=True)

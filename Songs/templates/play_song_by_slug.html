@@ -1,35 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Playing {{song.artist}} - {{song.title}}</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %} Playing {{song.artist}} - {{song.title}} {% endblock title %}
+
+{% block content %}
     <a href="../..">Song list</a>
     <hr>
     <h1>{{ song.title }}</h1>
     <h2>{{ song.artist }}</h2>
     <img src="{{ song.thumbnail.url }}"
         width="316"
-        height="316">
+        height="316">  <br>
     <audio controls>
       <source src="{{ song.audio_file.url}}" type="audio/mpeg">
       Your browser does not support the audio element.
-    </audio>
-
+    </audio> <br> <br>
     {% if is_your_song %}
             <button class="btn btn-dark btn-lg"><a href="{% url 'change_song' song.slug %}">Change</a> </button>
             <button class="btn btn-dark btn-lg"><a href="{% url 'delete_song' song.slug %}">Delete</a> </button>
     {% else %}
-            <button class="btn btn-dark btn-lg"><a href="...">Like</a> </button>
+            {% if is_liked %}
+                <button class="btn btn-dark btn-lg"><a href="{% url 'unlike_song' song.slug %}">Unlike</a> </button>
+            {% else %}
+                <button class="btn btn-dark btn-lg"><a href="{% url 'like_song' song.slug %}">Like</a> </button>
+            {% endif %}
     {% endif %}
+
 
     <hr>
     <h2>Lyrics:</h2>
     <pre>{{song.lyrics}}</pre>
-</body>
-</html>
-
-<!DOCTYPE html>
-<html>
+{% endblock content %}

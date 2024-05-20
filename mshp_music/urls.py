@@ -35,7 +35,7 @@ from django.contrib.staticfiles.storage import staticfiles_storage
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    #path('',)
+    path('',Users_views.mainPage, name='main'),
     path('login', Users_views.loginPage, name='login'),
     path('register', Users_views.register, name='register'),
     path('logout', Users_views.logoutPage, name='logout'),
@@ -45,7 +45,10 @@ urlpatterns = [
     path('profile/<slug:profile_id>/accept',Friends_views.accept_request, name='accept_friend_request'),
     path('profile/<slug:profile_id>/delete',Friends_views.delete_friend, name='delete_friend'),
     path('profile/change', Users_views.changeProfile),
+
     path('profile/change/preference', Users_views.update_profile_preferences),
+    #path('profile/<slug:profile_id>/preference/artists', Users_views.show_profile_preferences_artists),
+    #path('profile/<slug:profile_id>/preference/playlists', Users_views.show_profile_preferences_playlists),
 
     path('friend/list', Friends_views.show_list),
     path('friend/requests', Friends_views.show_requests),
@@ -69,12 +72,14 @@ urlpatterns = [
          a_views.PasswordResetCompleteView.as_view(template_name='password_reset/password_reset_complete.html'),
          name='password_reset_complete'),
 
-    path('', Songs_views.song_list, name='song_list'),
     path('song/<slug:song_id>/', Songs_views.play_song_by_slug, name='play_song_by_slug'),
     path('myvibe', Songs_views.my_vibe_page, name='my_vibe'),
     path('song/<slug:song_id>/change', Songs_views.change_song, name='change_song'),
     path('song/<slug:song_id>/delete', Songs_views.delete_song, name='delete_song'),
-    #path('song/<slug:song_id>/like', Songs_views.like_song, name='like_song'),
+    path('song/<slug:song_id>/like', Songs_views.like_song, name='like_song'),
+    path('song/<slug:playlist_id>/<slug:song_id>/delete', Songs_views.delete_song_from_playlist, name='delete_song_from_playlist'),
+    path('song/<slug:song_id>/unlike', Songs_views.unlike_song, name='unlike_song'),
+
 
     path('playlist/<slug:playlist_id>/upload', Songs_views.upload_song, name='upload_song'),
     path('playlist/create', Playlists_views.create_playlist, name='create_playlist'),

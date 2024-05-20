@@ -11,7 +11,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, get_object_or_404
 from .models import Playlist
 from Artists.models import Artist
-from Users.models import Profile
+from Users.models import Profile, PreferenceList
 from Songs.models import Song
 from django.contrib.auth.decorators import login_required
 from django.db.models.signals import post_save
@@ -77,7 +77,7 @@ def playlist_page(request, playlist_id):
     try:
         playlist = Playlist.objects.get(slug=playlist_id)
         profile = playlist.author
-
+        prlist = PreferenceList.objects.get(profile=request.user.profile)
 
 
 
@@ -86,6 +86,10 @@ def playlist_page(request, playlist_id):
         else:
             is_your_playlist = False
 
+        if playlist in prlist.playlists.all():
+            is_liked = True
+        else:
+            is_liked = False
 
         songs = playlist.songs.all();
         temp = []
@@ -94,13 +98,55 @@ def playlist_page(request, playlist_id):
             for artist in song.artists.all():
                 temp.append(artist)
 
+        visible = True
+        if playlist.is_private and is_your_playlist == False:
+            visible = False
+
         temp = set(temp)
         artists = list(temp)
-        context = {"profile": profile, "playlist" : playlist, "artists" : artists,
-                   "exist": True, "is_your_playlist": is_your_playlist, "songs" : songs}
-
+        context = {"profile": profile,"is_liked": is_liked, "playlist" : playlist, "artists" : artists, "artists_num": len(artists),
+                   "is_your_playlist": is_your_playlist, "songs" : songs,  "songs_num": len(songs), "visible" : visible}
     except Playlist.DoesNotExist:
-        context = {"exist": False}
+        context = {"visible": False}
     return render(request, 'playlist_page.html', context)
 
+
+@login_required(login_url='login')
+def like_playlist(request, playlist_id):
+    try:
+        playlist = Playlist.objects.get(slug=playlist_id)
+        prlist = PreferenceList.objects.get(profile=request.user.profile)
+
+        prlist.playlists.add(playlist)
+
+        messages.success(request, 'You liked this playlist')
+        return redirect('../../playlist/' + playlist_id)
+    except Playlist.DoesNotExist:
+        return render(request, 'not_found.html', {'what': 'playlist'})
+
+
+@login_required(login_url='login')
+def unlike_playlist(request, playlist_id):
+    try:
+        playlist = Playlist.objects.get(slug=playlist_id)
+        prlist = PreferenceList.objects.get(profile=request.user.profile)
+
+        prlist.playlists.remove(playlist)
+
+        messages.success(request, 'You unliked this playlist')
+        return redirect('../../playlist/' + playlist_id)
+    except Playlist.DoesNotExist:
+        return render(request, 'not_found.html', {'what': 'playlist'})
+
+'''@login_required(login_url='login')
+def delete_song_from_playlist(request, playlist_id,song_id):
+    try:
+        playlist = Playlist.objects.get(slug=playlist_id)
+        song = playlist.songs.all()[song_id]
+
+        song.delete()
+        messages.success(request, 'This song has been deleted')
+        return redirect(request.path_info)
+    except Playlist.DoesNotExist:
+        return render(request, 'not_found.html', {'what': 'song'})'''
 

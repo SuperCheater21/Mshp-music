@@ -11,6 +11,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, get_object_or_404
 from .models import Artist
 from Playlists.models import Playlist
+from Users.models import PreferenceList
 from Songs.models import Song
 from django.contrib.auth.decorators import login_required
 from django.db.models.signals import post_save
@@ -55,6 +56,7 @@ def artist_profile(request, artist_id):
     try:
         artist = Artist.objects.get(slug=artist_id)
         profile = artist.profile
+        prlist = PreferenceList.objects.get(profile=request.user.profile)
 
 
 
@@ -63,6 +65,12 @@ def artist_profile(request, artist_id):
             is_your_profile = True
         else:
             is_your_profile = False
+
+        print(artist, prlist.artists.all())
+        if artist in prlist.artists.all():
+            you_are_follower = True
+        else:
+            you_are_follower = False
 
         temp = False
         songs = []
@@ -74,8 +82,8 @@ def artist_profile(request, artist_id):
         #print(songs)
 
         context = {"user": profile.user, "artist": artist,
-                   "exist": True, "is_your_profile": is_your_profile,
-                   "songs": songs}
+                   "exist": True, "is_your_profile": is_your_profile,"you_are_follower": you_are_follower,
+                   "songs": songs, 'songs_num': len(songs)}
 
     except Artist.DoesNotExist:
         context = {"exist": False}
@@ -113,6 +121,33 @@ def artist_delete(request):
 
         messages.success(request, 'This artist has been deleted successfully')
         return redirect(request.path_info)
+    except Artist.DoesNotExist:
+        return render(request, 'not_found.html', {'what': 'artist'})
+
+@login_required(login_url='login')
+def follow_artist(request, artist_id):
+    try:
+        artist = Artist.objects.get(slug=artist_id)
+        prlist = PreferenceList.objects.get(profile=request.user.profile)
+
+        prlist.artists.add(artist)
+
+        messages.success(request, 'You are follower of this artist now')
+        return redirect('../../artist/' + artist_id)
+    except Artist.DoesNotExist:
+        return render(request, 'not_found.html', {'what': 'artist'})
+
+
+@login_required(login_url='login')
+def unfollow_artist(request, artist_id):
+    try:
+        artist = Artist.objects.get(slug=artist_id)
+        prlist = PreferenceList.objects.get(profile=request.user.profile)
+
+        prlist.artists.remove(artist)
+
+        messages.success(request, 'You are not follower of this artist now')
+        return redirect('../../artist/' + artist_id)
     except Artist.DoesNotExist:
         return render(request, 'not_found.html', {'what': 'artist'})
 

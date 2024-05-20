@@ -1,1 +1,24 @@
-Users/templates/profiles/profile.html
+{% extends 'base.html' %}
+
+{% block title %}Logout {% endblock %}
+{% block block_head %}
+<style>
+.btn btn-dark btn-lg {
+  display: block;
+  width: 100%;
+  border: none;
+  color: white;
+  padding: 14px 28px;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+}
+
+</style>
+{% endblock %}
+{% block content %}
+    <h2>You logged out!</h2>
+    <button class="btn btn-dark btn-lg" > <a href="{% url 'main' %}">Log in</a></button>
+
+
+{% endblock %}

@@ -3,10 +3,10 @@
 
 {% block content %}
 
-    {% if user_form.errors %}
+    {% if artist_form.errors %}
         <div class="alert alert-danger alert-dismissible" role="alert">
             <div id="form_errors">
-                {% for key, value in user_form.errors.items %}
+                {% for key, value in artist_form.errors.items %}
                     <strong>{{ value }}</strong>
                 {% endfor %}
             </div>
@@ -24,10 +24,10 @@
     </ul>
     {% endif %}
 
-
     {% if exist %}
         <h1>YOU ARE ALREADY ARTIST!</h1>
     {% else %}
+    <h1>Become artist</h1>
     <div class="form-content">
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}

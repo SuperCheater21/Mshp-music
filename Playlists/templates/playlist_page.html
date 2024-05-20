@@ -6,33 +6,54 @@
 
 {% block content %}
     <div class="entry">
-    {% if exist %}
+    {% if visible %}
         <h1> {{ playlist.title }} </h1>
         <p>playlist of {{ profile.user.username }}</p>
         <img class="rounded-circle account-img" src="../../media/{{profile.image}}" alt="{{profile.user.username}}'s profile picture" /> <br>
 
+        {%  if artists_num > 0 %}
         <p><b>Artist:</b></p>
 
         <ul>
             {% for artist in artists %}
-                <li><a href="{% url 'artist_profile' artist.slug %}"" style="color:black;"> {{ artist }}</a></li>
+                <li><a href="{% url 'artist_profile' artist.slug %}" style="color:black;"> {{ artist }}</a></li>
             {% endfor %}
-        </ul>
+        </ul> <br>
 
-        <br>
+        {% endif %}
 
+        {%  if songs_num > 0 %}
         <p><b>Songs:</b></p>
         <ul>
             {% for song in songs %}
+
                 <li> <a href="{% url 'play_song_by_slug' song.slug %}"  style="color:black;">{{ song.song_name }}</a> </li>
+                {% if is_your_playlist %}
+                    <button type="button" class="close"  aria-label="Close">
+                        <span aria-hidden="true"><a href="{% url 'delete_song_from_playlist' playlist.slug song.slug  %}" style="color:black;">&times;</a></span>
+                    </button>
+                {% endif %}
+
             {% endfor %}
         </ul>  <br>
+        {% endif %}
 
-        {% if is_your_playlist %}
-            <button class="btn btn-dark btn-lg"><a href="{% url 'change_playlist' playlist.slug %}">Change</a> </button>
-            <button class="btn btn-dark btn-lg"><a href="{% url 'delete_playlist' playlist.slug %}">Delete</a> </button>
+        {% if playlist.title == "Your recommendation" %}
         {% else %}
-            <button class="btn btn-dark btn-lg"><a href="...">Like</a> </button>
+        <br>
+        {% if is_your_playlist %}
+
+            <button class="btn btn-dark btn-lg"><a href="{% url 'change_playlist' playlist.slug %}">Change</a> </button>
+            <button class="btn btn-dark btn-lg"><a href="{% url 'delete_playlist' playlist.slug %}">Delete</a> </button> <br> <br>
+            <button class="btn btn-dark btn-lg"><a href="{% url 'upload_song' playlist.slug %}">Upload new song</a> </button>
+        {% else %}
+            {% if is_liked %}
+                <button class="btn btn-dark btn-lg"><a href="{% url 'unlike_playlist' playlist.slug %}">Unlike</a> </button>
+            {% else %}
+                <button class="btn btn-dark btn-lg"><a href="{% url 'like_playlist' playlist.slug %}">Like</a> </button>
+            {% endif %}
+        {% endif %}
+
         {% endif %}
 
         {% for message in messages %}
@@ -42,6 +63,7 @@
         <h1>Such playlist does not exist</h1>
     {% endif %}
     </div>
+
 
 
 {% endblock content%}

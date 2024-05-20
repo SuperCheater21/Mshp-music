@@ -59,6 +59,12 @@ class PreferenceList(models.Model):
     def get_genres(self):
         return self.genres.all()
 
+    def get_playlists(self):
+        return self.playlists.all()
+
+    def get_artists(self):
+        return self.artists.all()
+
 
 
     def count_genres(self):
