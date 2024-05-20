@@ -47,7 +47,7 @@ urlpatterns = [
     path('profile/change', Users_views.changeProfile),
 
     path('profile/change/preference', Users_views.update_profile_preferences),
-    #path('profile/<slug:profile_id>/preference/artists', Users_views.show_profile_preferences_artists),
+    path('profile/<slug:profile_id>/preference/artists', Users_views.show_profile_preferences_artists),
     #path('profile/<slug:profile_id>/preference/playlists', Users_views.show_profile_preferences_playlists),
 
     path('friend/list', Friends_views.show_list),

@@ -170,7 +170,7 @@ def save_profile(sender, instance, **kwargs):
 @login_required(login_url='login')
 def show_profile_preferences_artists(request, profile_id):
     try:
-        profile = Profile.object.get(slug=profile_id)
+        profile = Profile.objects.get(slug=profile_id)
         prlist = profile.preferencelist #PreferenceList.objects.get(profile=profile)
 
         if profile == request.user.profile:
@@ -178,8 +178,9 @@ def show_profile_preferences_artists(request, profile_id):
         else:
             is_your_profile = False
 
+
         return render(request, 'profiles/show_artist_preferences.html',
-                      {"artists":prlist.get_artist(), "is_your_profile":is_your_profile})
+                      {"artists": prlist.get_artists(), "is_your_profile":is_your_profile, "profile": profile})
     except Profile.DoesNotExist:
         return render(request, 'not_found.html', {'what': 'profile'})
 
@@ -187,7 +188,7 @@ def show_profile_preferences_artists(request, profile_id):
 @login_required(login_url='login')
 def show_profile_preferences_playlists(request, profile_id):
     try:
-        profile = Profile.object.get(slug=profile_id)
+        profile = Profile.objects.get(slug=profile_id)
         prlist = profile.preferencelist  # PreferenceList.objects.get(profile=profile)
 
         if profile == request.user.profile:
@@ -195,11 +196,13 @@ def show_profile_preferences_playlists(request, profile_id):
         else:
             is_your_profile = False
 
+
+
         return render(request, 'profiles/show_playlists_preferences.html',
-                      {"playlists": prlist.get_playlists(), "is_your_profile": is_your_profile})
+                      {"playlists": prlist.get_playlists(), "is_your_profile": is_your_profile, "profile": profile})
     except Profile.DoesNotExist:
         return render(request, 'not_found.html', {'what': 'profile'})
 
-#@receiver(post_save, sender=User)
+@login_required(login_url='login')
 def mainPage(request):
     return render(request, 'main.html')
