@@ -1,28 +1,116 @@
 {% extends "base.html" %}
 {% block title %} Create playlist {% endblock title %}
 
+
+{% block block_head %}
+<style>
+    @font-face {
+font-family: 'GhotamBook';
+src: url("Mshp-music-main/static/fonts/Circular/GothamBook.ttf") format("ttf");
+font-weight: 300;
+font-style: normal;
+}
+
+
+.author-info {
+background-color: #222;
+color: #fff;
+float: right;
+width: 300px;
+padding: 10px;
+margin-top: 50px;
+border-radius: 10px;
+box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+font-family: 'GhotamBook',  sans-serif;
+}
+    /* Стили для списка песен */
+.song-list {
+float: left;
+width: 300px;
+padding: 10px;
+margin-top: 50px;
+background-color: #222;
+color: #fff;
+border-radius: 10px;
+box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+font-family: 'GhotamBook',  sans-serif;
+}
+
+.artist-list{
+width: 300px;
+padding: 10px;
+margin-top: 50px;
+background-color: #222;
+color: #fff;
+border-radius: 10px;
+box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+font-family: 'GhotamBook',  sans-serif;
+}
+body {
+background-color: #111;
+color: #fff;
+}
+.navbar {
+background-color: #222; /* Серый цвет фона */
+padding: 10px;
+position: absolute;
+top: 0;
+right: 83%;
+width: 100%;
+display: flex;
+justify-content: flex-end;
+border-radius: 10px;
+box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+.nav-links {
+display: flex;
+align-items: flex-start;
+gap: 15px;
+}
+
+.nav-links a {
+text-decoration: none;
+color: darkgray;
+padding: 10px;
+transition: color 0.3s ease;
+font-family: 'GhotamBook',  sans-serif;
+}
+
+.nav-links a:hover {
+color: white;
+}
+</style>
+{% endblock %}
+
+
 {% block content %}
 
-    {% if playlist_form.errors %}
-        <div class="alert alert-danger alert-dismissible" role="alert">
-            <div id="form_errors">
-                {% for key, value in playlist_form.errors.items %}
-                    <strong>{{ value }}</strong>
-                {% endfor %}
-            </div>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    {% endif %}
+{% if playlist_form.errors %}
+<div class="alert alert-danger alert-dismissible" role="alert">
+    <div id="form_errors">
+        {% for key, value in playlist_form.errors.items %}
+        <strong>{{ value }}</strong>
+        {% endfor %}
+    </div>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endif %}
+<div class="navbar">
+    <nav class="nav-links">
+        <a href="{% url 'main' %}">Home</a>
+    </nav>
+</div>
 
-
-    <h1>Create new playlist</h1>
+<div class="centered_div">
+    <h1>Create new playlist</h1> <br>
     <div class="form-content">
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-row">
-                <div class="col-md-5">
+                <div class="col-md-5" style="width: 350px;">
                     <div class="form-group">
 
                         <br>
@@ -30,13 +118,11 @@
                         {{ playlist_form.title }}
 
 
-
                     </div>
                     <br>
                     <div class="form-group">
-
                         <label class="small mb-1" style="font-size:20px;">Thumbnail:</label>
-                        {{ playlist_form.playlist_thumbnail }} <br>
+                        {{ playlist_forlm.playlist_thumbnail }} <br>
 
 
                         <label class="small mb-1" style="font-size:20px;">Genres:</label>
@@ -49,8 +135,11 @@
                 </div>
             </div>
             <br><br>
-            <button type="submit" class="btn btn-dark btn-lg">Save Changes</button>
-            <button type="reset" class="btn btn-dark btn-lg">Reset</button>
+            <div class="centered_div1">
+                <button type="submit" class="btn btn-dark btn-lg">Save Changes</button>
+                <button type="reset" class="btn btn-dark btn-lg">Reset</button>
+            </div>
         </form>
     </div>
+</div>
 {% endblock content %}

@@ -3,39 +3,59 @@
 
 {% block title %} Artists Preferences {% endblock title %}
 
+{% block block_head %}
+<style>
+    .centered_div {
+   width: Xu;
+   height: Yu;
+   position: absolute;
+   top: 40%;
+   left: 34%;
 
+}
+</style>
+{% endblock %}
 
 {% block content %}
-    <div class="entry">
-        <h1>Favourite artists of {{profile.user.username}}:</h1>
-        <ul>
+<div class="navbar">
+    <nav class="nav-links">
+        <a href="{% url 'main' %}">Home</a>
+    </nav>
+</div>
+<div class="entry">
+    {% if exist %}
+    <h1>Favourite artists of {{profile.user.username}}:</h1>
+    <ul>
         {% for artist in artists %}
-         <div class="d-flex align-items-center">
-             <li><h3 >{{ artist.stage_name }}</h3></li>
+        <div class="d-flex align-items-center">
+            <li><h3>{{ artist.stage_name }}</h3></li>
             {% if is_your_profile %}
-                <button type="button"  class="btn btn-sm" aria-label="Close">
-                    <span aria-hidden="true"><a href="{% url 'unfollow_artist' artist.slug %}" style="color:black;"> &#10062;</a></span>
-                </button>
+            <button type="button" class="btn btn-sm" aria-label="Close">
+                <span aria-hidden="true"><a href="{% url 'unfollow_artist' artist.slug %}" style="color:black;"> &#10062;</a></span>
+            </button>
             {% else %}
-                <button type="button"  class="btn btn-sm" aria-label="Close">
-                    <span aria-hidden="true"><a href="{% url 'follow_artist' artist.slug %}" style="color:black;"> &#9989; </a></span>
-                </button>
+            <button type="button" class="btn btn-sm" aria-label="Close">
+                <span aria-hidden="true"><a href="{% url 'follow_artist' artist.slug %}"
+                                            style="color:black;"> &#9989; </a></span>
+            </button>
             {% endif %}
-            <img class="rounded-circle account-img" src="../../../media/{{artist.profile.image}}" href="{% url 'artist_profile' artist.slug %}" alt="{{artist.profile.user.username}}'s profile picture" /> <br>
+            <img class="rounded-circle account-img" src="../../../media/{{artist.profile.image}}"
+                 href="{% url 'artist_profile' artist.slug %}"
+                 alt="{{artist.profile.user.username}}'s profile picture"/> <br>
         </div>
-
-
-
-
-
         {% endfor %}
-        </ul>
-
-        {% for message in messages %}
-					<p id="messages">{{ message }}</p>
-		{% endfor %}
-
+    </ul>
+    {% else %}
+    <div class="centered_div">
+        <h1>{{profile.user.username}} don't have favourite artists</h1>
     </div>
+    {% endif %}
+
+    {% for message in messages %}
+    <p id="messages">{{ message }}</p>
+    {% endfor %}
+
+</div>
 
 
 {% endblock content%}

@@ -46,12 +46,12 @@ urlpatterns = [
     path('profile/<slug:profile_id>/delete',Friends_views.delete_friend, name='delete_friend'),
     path('profile/change', Users_views.changeProfile),
 
-    path('profile/change/preference', Users_views.update_profile_preferences),
-    path('profile/<slug:profile_id>/preference/artists', Users_views.show_profile_preferences_artists),
-    #path('profile/<slug:profile_id>/preference/playlists', Users_views.show_profile_preferences_playlists),
+    path('profile/change/preference', Users_views.update_profile_preferences, name="change_preferences"),
+    path('profile/<slug:profile_id>/preference/artists', Users_views.show_profile_preferences_artists, name="artists"),
+    path('profile/<slug:profile_id>/preference/playlists', Users_views.show_profile_preferences_playlists, name="playlists"),
 
-    path('friend/list', Friends_views.show_list),
-    path('friend/requests', Friends_views.show_requests),
+    path('friend/list', Friends_views.show_list, name="list"),
+    path('friend/requests', Friends_views.show_requests, name="requests"),
 
     # Password reset links (ref: https://github.com/django/django/blob/master/django/contrib/auth/views.py)
     path('password_change_done/',
@@ -79,9 +79,10 @@ urlpatterns = [
     path('song/<slug:song_id>/like', Songs_views.like_song, name='like_song'),
     path('song/<slug:playlist_id>/<slug:song_id>/delete', Songs_views.delete_song_from_playlist, name='delete_song_from_playlist'),
     path('song/<slug:song_id>/unlike', Songs_views.unlike_song, name='unlike_song'),
+    path('song/upload', Songs_views.upload_song, name='upload_song'),
 
 
-    path('playlist/<slug:playlist_id>/upload', Songs_views.upload_song, name='upload_song'),
+    path('playlist/<slug:playlist_id>/upload', Songs_views.upload_song_in_playlist, name='upload_song_in_playlist'),
     path('playlist/create', Playlists_views.create_playlist, name='create_playlist'),
     path('playlist/<slug:playlist_id>/like', Playlists_views.like_playlist, name='like_playlist'),
     path('playlist/<slug:playlist_id>/unlike', Playlists_views.unlike_playlist, name='unlike_playlist'),

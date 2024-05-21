@@ -1,24 +1,26 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% block title %} Login {% endblock title %}
 
-{% block title %}Logout {% endblock %}
+
 {% block block_head %}
 <style>
-.btn btn-dark btn-lg {
-  display: block;
-  width: 100%;
-  border: none;
-  color: white;
-  padding: 14px 28px;
-  font-size: 16px;
-  cursor: pointer;
-  text-align: center;
-}
-
+    body {
+      background-color: #111;
+      color: #fff;
+    }
+            .centered_div1{
+            position: relative;
+       left: 0%;
+      }
 </style>
 {% endblock %}
+
+
 {% block content %}
+
+<div class="centered_div">
     <h2>You logged out!</h2>
-    <button class="btn btn-dark btn-lg" > <a href="{% url 'login' %}">Log in</a></button>
+    <button class="btn btn-dark btn-lg"><a href="{% url 'login' %}">Log in</a></button>
+</div>
 
-
-{% endblock %}
+{% endblock content %}

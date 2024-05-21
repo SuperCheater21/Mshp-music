@@ -6,30 +6,29 @@ from Songs.models import Song
 from PIL import Image
 from Users.utils import get_random_code
 from django.template.defaultfilters import slugify
-#from django.core.urlresolvers import reverse
+
+
+# from django.core.urlresolvers import reverse
 
 class Playlist(models.Model):
     title = models.CharField(max_length=50)
-    author = models.ForeignKey(Profile,default="Anonymous", on_delete=models.CASCADE)
+    author = models.ForeignKey(Profile, default="Anonymous", on_delete=models.CASCADE)
 
-    #artists = models.ManyToManyField(Artist, blank=True)
+    # artists = models.ManyToManyField(Artist, blank=True)
     playlist_thumbnail = models.ImageField(default='playlist_pics/album.png', upload_to='playlist_pics')
 
-    genre = models.ForeignKey(Genre,on_delete=models.CASCADE, blank=True, null=True)
-    songs = models.ManyToManyField(Song,default=None)
+    genre = models.ForeignKey(Genre, on_delete=models.CASCADE, blank=True, null=True)
+    songs = models.ManyToManyField(Song, default=None)
 
     is_private = models.BooleanField(default=False)
 
     created = models.DateTimeField(auto_now=True)
     last_updated = models.DateTimeField(auto_now_add=True, blank=True)
 
-
     slug = models.SlugField(unique=True, blank=True)
-
 
     def __str__(self):
         return self.title
-
 
     def save(self, *args, **kwargs):
 
@@ -56,4 +55,3 @@ class Playlist(models.Model):
             img.save(self.playlist_thumbnail.path)
 
         super().save(*args, **kwargs)
-

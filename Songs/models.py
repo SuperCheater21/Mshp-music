@@ -4,23 +4,28 @@ from Users.utils import get_random_code
 from Genres.models import Genre
 from django.template.defaultfilters import slugify
 from PIL import Image
+
+
 class Song(models.Model):
     song_name = models.CharField(max_length=50)
-    artists = models.ManyToManyField(Artist,default=None)
+    artists = models.ManyToManyField(Artist, default=None)
     thumbnail = models.ImageField(upload_to='song_thumbnail',
-                                      help_text=".jpg, .png, .jpeg, .gif, .svg supported", default='song_thumbnail/thumbnail.png')
+                                  help_text=".jpg, .png, .jpeg, .gif, .svg supported",
+                                  default='song_thumbnail/thumbnail.png')
     audio_file = models.FileField(upload_to='audio_files', help_text=".mp3 only supported")
     lyrics = models.TextField(blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
-    last_updated = models.DateTimeField( auto_now=True)
-    genre = models.ForeignKey(Genre,on_delete=models.CASCADE, blank=True, null=True)
-    #duration = models.CharField(max_length=20)
+    last_updated = models.DateTimeField(auto_now=True)
+    genre = models.ForeignKey(Genre, on_delete=models.CASCADE, blank=True, null=True)
+    # duration = models.CharField(max_length=20)
 
     slug = models.SlugField(unique=True, blank=True)
 
     def __str__(self):
         return self.song_name
 
+    def get_artists(self):
+        return self.artists.all()
 
     def save(self, *args, **kwargs):
 
@@ -44,4 +49,3 @@ class Song(models.Model):
             img.save(self.thumbnail.path)
 
         super().save(*args, **kwargs)
-

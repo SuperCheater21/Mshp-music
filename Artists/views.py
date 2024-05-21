@@ -26,16 +26,14 @@ from .forms import ArtistForm
 def create_artist(request):
     artist = Artist.objects.filter(profile=request.user.profile)
     if artist.exists():
-        #messages.error(request, 'Artist already exists')
+        # messages.error(request, 'Artist already exists')
 
         return render(request, 'create_artist.html',
                       {'exist': True, 'artist': artist})
 
     if request.method == 'POST':
 
-
-
-        artist_form = ArtistForm(request.POST,request.FILES)
+        artist_form = ArtistForm(request.POST, request.FILES)
 
         if artist_form.is_valid():
             new_artist = artist_form.save(commit=False)
@@ -43,13 +41,14 @@ def create_artist(request):
             new_artist.profile = request.user.profile
             new_artist.save()  # Save the new song first
 
-            #messages.success(request, 'Artis has been created successfully')
+            # messages.success(request, 'Artis has been created successfully')
             return redirect('/artist/' + new_artist.slug)
     else:
         artist_form = ArtistForm()
 
     return render(request, 'create_artist.html',
-                  {'artist_form': artist_form, 'exist' : False })
+                  {'artist_form': artist_form, 'exist': False})
+
 
 @login_required(login_url="login")
 def artist_profile(request, artist_id):
@@ -57,9 +56,6 @@ def artist_profile(request, artist_id):
         artist = Artist.objects.get(slug=artist_id)
         profile = artist.profile
         prlist = PreferenceList.objects.get(profile=request.user.profile)
-
-
-
 
         if profile.user == request.user:
             is_your_profile = True
@@ -79,10 +75,10 @@ def artist_profile(request, artist_id):
                 if field == artist:
                     songs.append(instance)
                     break
-        #print(songs)
+        # print(songs)
 
         context = {"user": profile.user, "artist": artist,
-                   "exist": True, "is_your_profile": is_your_profile,"you_are_follower": you_are_follower,
+                   "exist": True, "is_your_profile": is_your_profile, "you_are_follower": you_are_follower,
                    "songs": songs, 'songs_num': len(songs)}
 
     except Artist.DoesNotExist:
@@ -98,7 +94,6 @@ def artist_change(request):
 
         if request.method == 'POST':
 
-
             if artist_form.is_valid():
                 artist_form.save()
                 messages.success(request, 'This artist has been changed successfully')
@@ -107,10 +102,9 @@ def artist_change(request):
             artist_form = ArtistForm()
 
         return render(request, 'create_artist.html',
-                  {'artist_form': artist_form, 'exist': False})
+                      {'artist_form': artist_form, 'exist': False})
     except Artist.DoesNotExist:
-        return render(request, 'not_found.html', {'what': 'artist'})
-
+        return render(request, 'not_found.html')
 
 
 @login_required(login_url='login')
@@ -122,7 +116,8 @@ def artist_delete(request):
         messages.success(request, 'This artist has been deleted successfully')
         return redirect(request.path_info)
     except Artist.DoesNotExist:
-        return render(request, 'not_found.html', {'what': 'artist'})
+        return render(request, 'not_found.html')
+
 
 @login_required(login_url='login')
 def follow_artist(request, artist_id):
@@ -150,4 +145,3 @@ def unfollow_artist(request, artist_id):
         return redirect('../../artist/' + artist_id)
     except Artist.DoesNotExist:
         return render(request, 'not_found.html', {'what': 'artist'})
-

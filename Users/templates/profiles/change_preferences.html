@@ -1,34 +1,55 @@
 {% extends "base.html" %}
-{% block title %} Preference settings {% endblock title %}
-{% block content %}
-    <a href="../profile/{{ user.profile.slug }}"><img class="rounded-circle account-img" src="../../../media/{{ user.profile.image }} " style="cursor: pointer;"/> </a>
+{% block title %} Preferences {% endblock title %}
 
-    {% if user_form.errors %}
-        <div class="alert alert-danger alert-dismissible" role="alert">
-            <div id="form_errors">
-                {% for key, value in user_form.errors.items %}
-                    <strong>{{ value }}</strong>
-                {% endfor %}
-            </div>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    {% endif %}
+
+{% block block_head %}
+<style>
+    body {
+      background-color: #111;
+      color: #fff;
+    }
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+{% if user_form.errors %}
+<div class="alert alert-danger alert-dismissible" role="alert">
+    <div id="form_errors">
+        {% for key, value in user_form.errors.items %}
+        <strong>{{ value }}</strong>
+        {% endfor %}
+    </div>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endif %}
+
+
+<div class="centered_div">
+    <a href="../profile/{{ user.profile.slug }}"><img class="rounded-circle account-img"
+                                                      src="../../../media/{{ user.profile.image }} "
+                                                      style="cursor: pointer;"/> </a>
     <div class="form-content">
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-row">
-                <div class="col-md-5">
+                <div class="col-md-5" style="width: 350px;">
                     <div class="form-group">
-                        <label class="small mb-1">Your favourite genres:</label> <br>
+                        <label class="small mb-1" style="width:300px;">Your favourite genres:</label> <br>
                         {{ preference_form.genres }}
                     </div>
                 </div>
             </div>
             <br><br>
-            <button type="submit" class="btn btn-dark btn-lg">Save Changes</button>
-            <button type="reset" class="btn btn-dark btn-lg">Reset</button>
+            <div class="centered_div1">
+                <button type="submit" class="btn btn-dark btn-lg">Save Changes</button>
+                <button type="reset" class="btn btn-dark btn-lg">Reset</button>
+            </div>
         </form>
     </div>
+</div>
 {% endblock content %}
+

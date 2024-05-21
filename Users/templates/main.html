@@ -1,7 +1,168 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 
-{% block title %}Main{% endblock title %}
+{% block title %} Main {% endblock title %}
+
+{% block block_head %}
+<style>
+    @font-face {
+font-family: 'GhotamBook';
+src: url("Mshp-music-main/static/fonts/Circular/GothamBook.ttf") format("ttf");
+font-weight: 300;
+font-style: normal;
+}
 
 
-{% block content %}{% endblock content %}
+.author-info {
+background-color: #222;
+color: #fff;
+float: right;
+width: 300px;
+padding: 10px;
+margin-top: 0px;
+border-radius: 10px;
+box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+font-family: 'GhotamBook',  sans-serif;
+}
+    /* Стили для списка песен */
+.song-list {
+float: left;
+width: 300px;
+padding: 10px;
+margin-top: 30px;
+background-color: #222;
+color: #fff;
+border-radius: 10px;
+box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+font-family: 'GhotamBook',  sans-serif;
+}
+
+.artist-list{
+width: 300px;
+padding: 10px;
+margin-top: 30px;
+background-color: #222;
+color: #fff;
+border-radius: 10px;
+box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+font-family: 'GhotamBook',  sans-serif;
+}
+body {
+background-color: #111;
+color: #fff;
+}
+.navbar {
+background-color: #222; /* Серый цвет фона */
+padding: 10px;
+position: absolute;
+top: 0;
+right: 83%;
+width: 100%;
+display: flex;
+justify-content: flex-end;
+border-radius: 10px;
+box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+.nav-links {
+display: flex;
+align-items: flex-start;
+gap: 15px;
+}
+
+
+.nav-links a {
+text-decoration: none;
+color: darkgray;
+padding: 10px;
+transition: color 0.3s ease;
+font-family: 'GhotamBook',  sans-serif;
+}
+
+.nav-links a:hover {
+color: white;
+}
+    .centered_div {
+width: Xu;
+height: Yu;
+position: absolute;
+top: 40%;
+left: 34%;
+
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="navbar">
+    <nav class="nav-links">
+        <a href="{% url 'logout' %}">Logout</a>
+        <a href="{% url 'requests' %}">Requests</a>
+        <a href="{% url 'list' %}">Friends</a>
+    </nav>
+</div>
+<div class="entry">
+    <div style="text-align: center; margin-top: 20px; margin-right: 20px;">
+        <h1>You are {{user.username}}</h1>
+        <img class="rounded-circle account-img" src="../../../media/{{user.profile.image}}"
+             alt="{{user.username}}'s profile picture"/> <br>
+        <br>
+        <button class="btn btn-dark btn-lg"><a href="{% url 'upload_song'  %}">Upload a new song </a></button>
+        <br> <br>
+        <button class="btn btn-dark btn-lg"><a href="{% url 'create_playlist'  %}">Create a new playlist</a></button>
+        <br><br>
+        <button class="btn btn-dark btn-lg"><a href="{% url 'create_artist'  %}">Become an artist</a></button>
+
+
+    </div>
+
+    {% if users_num > 0 %}
+    <div class="artist-list">
+        <p><b>Best users:</b></p>
+
+        <ul>
+            {% for user in users %}
+            <li><a href="{% url 'profile' user.profile.slug %}" style="color:white;"> {{ user.username }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    {% if playlists_num > 0 %}
+    <div class="artist-list">
+        <p><b>Best playlists:</b></p>
+
+        <ul>
+            {% for playlist in playlists %}
+            <li><a href="{% url 'playlist_page' playlist.slug %}" style="color:white;"> {{ playlist.title }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    {% if genres_num > 0 %}
+    <div class="song-list">
+        <p><b>Favourite genres:</b></p>
+
+        <ul>
+            {% for genre in genres %}
+            <li> {{ genre }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <div class="author-info">
+
+        <p><b>Your bio</b>: {{ user.profile.bio }}</p>
+
+    </div>
+
+
+    {% for message in messages %}
+    <p id="messages">{{ message }}</p>
+    {% endfor %}
+</div>
+
+
+{% endblock content %}
+

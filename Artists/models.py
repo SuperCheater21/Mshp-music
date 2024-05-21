@@ -3,6 +3,7 @@ from Users.utils import get_random_code
 from django.template.defaultfilters import slugify
 from Users.models import Profile
 
+
 class Artist(models.Model):
     stage_name = models.CharField(max_length=50)
     profile = models.OneToOneField(Profile, on_delete=models.CASCADE)
@@ -14,13 +15,10 @@ class Artist(models.Model):
 
     slug = models.SlugField(unique=True, blank=True)
 
-
     def __str__(self):
         return self.stage_name
 
-
     def save(self, *args, **kwargs):
-
         # creating slug
         ex = False
         to_slug = slugify(str(self.stage_name))
@@ -33,4 +31,3 @@ class Artist(models.Model):
 
         super().save(*args, **kwargs)
         # resizing images
-

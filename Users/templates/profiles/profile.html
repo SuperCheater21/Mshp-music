@@ -4,48 +4,161 @@
 {% block title %} Profile {% endblock title %}
 
 {% block block_head %}
-<link rel="stylesheet" type="text/css" href="../../static/style.css" />
-{% endblock block_head %}
+<style>
+    @font-face {
+font-family: 'GhotamBook';
+src: url("Mshp-music-main/static/fonts/Circular/GothamBook.ttf") format("ttf");
+font-weight: 300;
+font-style: normal;
+}
+
+
+.author-info {
+background-color: #222;
+color: #fff;
+float: right;
+width: 300px;
+padding: 10px;
+margin-top: 50px;
+border-radius: 10px;
+box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+font-family: 'GhotamBook',  sans-serif;
+}
+    /* Стили для списка песен */
+.song-list {
+float: left;
+width: 300px;
+padding: 10px;
+margin-top: 50px;
+background-color: #222;
+color: #fff;
+border-radius: 10px;
+box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+font-family: 'GhotamBook',  sans-serif;
+}
+
+.artist-list{
+width: 300px;
+padding: 10px;
+margin-top: 50px;
+background-color: #222;
+color: #fff;
+border-radius: 10px;
+box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+font-family: 'GhotamBook',  sans-serif;
+}
+body {
+background-color: #111;
+color: #fff;
+}
+.navbar {
+background-color: #222; /* Серый цвет фона */
+padding: 10px;
+position: absolute;
+top: 0;
+right: 83%;
+width: 100%;
+display: flex;
+justify-content: flex-end;
+border-radius: 10px;
+box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+.nav-links {
+display: flex;
+align-items: flex-start;
+gap: 15px;
+}
+
+.nav-links a {
+text-decoration: none;
+color: darkgray;
+padding: 10px;
+transition: color 0.3s ease;
+font-family: 'GhotamBook',  sans-serif;
+}
+
+.nav-links a:hover {
+color: white;
+}
+</style>
+{% endblock %}
 
 {% block content %}
-    <div class="entry">
+<div class="navbar">
+    <nav class="nav-links">
+        <a href="{% url 'main' %}">Home</a>
+        <a href="{% url 'artists' profile.slug %}">Artists</a>
+        <a href="{% url 'playlists' profile.slug  %}">Playlists</a>
+    </nav>
+</div>
+<div class="entry">
     {% if exist %}
+    <div style="text-align: center; margin-top: 20px; margin-right: 20px;">
         <h1>Profile of {{user.username}}</h1>
-        <img class="rounded-circle account-img" src="../../../media/{{profile.image}}" alt="{{user.username}}'s profile picture" /> <br>
+        <img class="rounded-circle account-img" src="../../../media/{{profile.image}}"
+             alt="{{user.username}}'s profile picture"/> <br>
+        <br> <br>
+        {% if is_your_profile %}
+        <button class="btn btn-dark btn-lg"><a href="../change">Change Your Profile</a></button>
+        {% else %}
+        {% if is_your_friend %}
+        <button class="btn btn-dark btn-lg"><a href="delete">Delete Friend</a></button>
+        {% else %}
+        {% if is_receiver %}
+        <button class="btn btn-dark btn-lg"><a href="accept">Accept Friend Request</a></button>
+        <button class="btn btn-dark btn-lg"><a href="reject">Reject Friend Request</a></button>
+        {% else %}
+        {% if is_sender %}
+        <button class="btn btn-dark btn-lg"><a href="reject">Delete Friend Request</a></button>
+        {% else %}
+        <button class="btn btn-dark btn-lg"><a href="send">Add Friend</a></button>
+        {% endif %}
+        {% endif %}
+        {% endif %}
+        {% endif %}
+
+    </div>
+
+    <div class="author-info">
+
+        <p><b>Bio</b>: {{ profile.bio }}</p>
+
+    </div>
+    {% if artists_num > 0 %}
+    <div class="artist-list">
+        <p><b>Artist:</b></p>
+
+        <ul>
+            {% for artist in artists %}
+            <li><a href="{% url 'artist_profile' artist.slug %}" style="color:white;"> {{ artist }}</a></li>
+            {% endfor %}
+        </ul>
+        <br>
+    </div>
+    {% endif %}
+    {% if genre_num > 0 %}
+    <div class="song-list">
         <p><b>Favourite genres:</b></p>
 
         <ul>
             {% for genre in genres.get_genres %}
-                <li> {{ genre }}</li>
+            <li> {{ genre }}</li>
             {% endfor %}
         </ul>
-
-        {% if is_your_profile %}
-            <button class="btn btn-dark btn-lg"><a href="../change">Change Your Profile</a> </button>
-        {% else %}
-            {% if is_your_friend %}
-                <button class="btn btn-dark btn-lg"><a href="delete">Delete Friend</a> </button>
-            {% else %}
-                {% if is_receiver %}
-                    <button class="btn btn-dark btn-lg"><a href="accept">Accept Friend Request</a> </button>
-                    <button class="btn btn-dark btn-lg"><a href="reject">Reject Friend Request</a> </button>
-                {% else %}
-                    {% if is_sender %}
-                         <button class="btn btn-dark btn-lg"><a href="reject">Delete Friend Request</a> </button>
-                    {% else %}
-                        <button class="btn btn-dark btn-lg"><a href="send">Add Friend</a> </button>
-                    {% endif %}
-                {% endif %}
-            {% endif %}
-        {% endif %}
-
-        {% for message in messages %}
-					<p id="messages">{{ message }}</p>
-		{% endfor %}
-    {% else %}
-        <h1>Such profile does not exist</h1>
-    {% endif %}
+        <br>
     </div>
+    {% endif %}
 
 
-{% endblock content%}
+    {% for message in messages %}
+    <p id="messages">{{ message }}</p>
+    {% endfor %}
+    {% else %}
+    <h1>Such profile does not exist</h1>
+    {% endif %}
+</div>
+
+
+{% endblock content %}
+

@@ -13,45 +13,56 @@ from django.http import Http404, HttpResponse, HttpResponseForbidden
 from django.dispatch import receiver
 from django.http import HttpResponse
 
-
 from django.contrib.auth.models import User
 from .models import FriendRequest, FriendList
 from Users.models import Profile
 
+
 @login_required(login_url='login')
-def send_request(request,profile_id):
+def send_request(request, profile_id):
     sender_user = request.user.profile
     receiver_user = Profile.objects.get(slug=profile_id)
 
-    friend_request = FriendRequest.objects.get_or_create(sender=sender_user,receiver=receiver_user)
+    friend_request = FriendRequest.objects.get_or_create(sender=sender_user, receiver=receiver_user)
 
-    return redirect(request.path_info)
-
-@login_required(login_url='login')
-def accept_request(request,profile_id):
-    receiver_user = request.user.profile
-    sender_user = Profile.objects.get(slug=profile_id)
-
-    friend_request = get_object_or_404(FriendRequest,  sender=sender_user,receiver=receiver_user)
-    friend_request.status = 'accepted'
-    friend_request.save()
-
-    return redirect(request.path_info)
-
-@login_required(login_url='login')
-def reject_request(request,profile_id):
-    receiver_user = request.user.profile
-    sender_user = Profile.objects.get(slug=profile_id)
-
-    friend_request = get_object_or_404(FriendRequest,sender=sender_user, receiver=receiver_user)
-    friend_request.status = 'rejected'
-    friend_request.save()
-
-    return redirect(request.path_info)
+    return HttpResponse(status=204)
 
 
 @login_required(login_url='login')
-def delete_friend(request,profile_id):
+def accept_request(request, profile_id):
+    user1 = request.user.profile
+    user2 = Profile.objects.get(slug=profile_id)
+
+    try:
+        friend_request = FriendRequest.objects.get(sender=user2, receiver=user1)
+        friend_request.status = 'accepted'
+        friend_request.save()
+    except FriendRequest.DoesNotExist:
+        pass
+
+    return HttpResponse(status=204)
+
+
+@login_required(login_url='login')
+def reject_request(request, profile_id):
+    user1 = request.user.profile
+    user2 = Profile.objects.get(slug=profile_id)
+
+    friend_request1 = FriendRequest.objects.filter(sender=user1, receiver=user2)
+    friend_request2 = FriendRequest.objects.filter(sender=user2, receiver=user1)
+    if len(friend_request1) > 0:
+        friend_request1[0].status = 'rejected'
+        friend_request1[0].save()
+
+    if len(friend_request2) > 0:
+        friend_request2[0].status = 'rejected'
+        friend_request2[0].save()
+
+    return HttpResponse(status=204)
+
+
+@login_required(login_url='login')
+def delete_friend(request, profile_id):
     target_profile = Profile.objects.get(slug=profile_id)
 
     target_friend_list = FriendList.objects.get(profile=target_profile)
@@ -63,15 +74,16 @@ def delete_friend(request,profile_id):
     target_profile.save()
     user_friend_list.save()
 
-    return redirect(request.path_info)
+    return HttpResponse(status=204)
+
 
 @receiver(post_save, sender=FriendRequest)
 def post_save_interaction_with_friend_request(sender, instance, created, **kwargs):
     sender_ = instance.sender
     receiver_ = instance.receiver
-#print("here")
+    # print("here")
     if instance.status == 'accepted':
-        #print('accepted')
+        # print('accepted')
         try:
             friend_list_sender = FriendList.objects.get(profile=sender_)
             friend_list_receiver = FriendList.objects.get(profile=receiver_)
@@ -86,20 +98,22 @@ def post_save_interaction_with_friend_request(sender, instance, created, **kwarg
             pass
 
     elif instance.status == 'rejected':
-        #print('rejected')
+        # print('rejected')
         FriendRequest.objects.filter(pk=instance.pk).delete()
+
+
 @login_required(login_url='login')
 def show_requests(request):
     received_list_of_requests = FriendRequest.objects.filter(receiver=request.user.profile)
     sent_list_of_requests = FriendRequest.objects.filter(sender=request.user.profile)
 
-    return render(request, 'requests_list.html', {"received": received_list_of_requests, "sent": sent_list_of_requests})
+    return render(request, 'requests_list.html', {"received": received_list_of_requests, "sent": sent_list_of_requests,
+                                                  "profile": request.user.profile})
+
 
 @login_required(login_url='login')
 def show_list(request):
-     friend_list = FriendList.objects.get(profile=request.user.profile)
-     #print(friend_list.friends)
+    friend_list = FriendList.objects.get(profile=request.user.profile)
+    # print(friend_list.friends)
 
-
-     return render(request, 'friend_list.html', {"friend_list": friend_list})
-
+    return render(request, 'friend_list.html', {"friend_list": friend_list, "profile": request.user.profile})

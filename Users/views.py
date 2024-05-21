@@ -17,6 +17,7 @@ from django.shortcuts import get_object_or_404
 
 from Friends.models import FriendList, FriendRequest
 from Playlists.models import Playlist
+from Songs.models import Song
 from .models import Profile, PreferenceList
 from django.db import IntegrityError
 
@@ -105,10 +106,10 @@ def profilePage(request, profile_id):
         context = {"user": profile.user, "profile": profile,
                    "exist": True, "is_your_profile": is_your_profile,
                    "genres": genres, "is_your_friend": is_your_friend,
-                   "is_receiver": is_receiver, "is_sender": is_sender}
+                   "is_receiver": is_receiver, "is_sender": is_sender, "genre_num": len(genres.genres.all())}
 
     except Profile.DoesNotExist:
-        context = {"exist": False}
+        return render(request, 'not_found.html')
     return render(request, 'profiles/profile.html', context)
 
 
@@ -155,7 +156,7 @@ def post_save_create_profile(sender, instance, created, **kwargs):
             Playlist.objects.create(title="Your favourite",
                                     author=instance.profile,
                                     playlist_thumbnail='playlist_pics/heart.jpeg',
-                                    is_private=True)
+                                    is_private=True, genre="all sorts of genres")
         except IntegrityError:
             pl = Playlist.objects.get(author=instance.profile)
             prlist.playlists.add(pl)
@@ -178,11 +179,14 @@ def show_profile_preferences_artists(request, profile_id):
         else:
             is_your_profile = False
 
+        exist = False
+        if len(prlist.get_artists()) > 0:
+            exist = True
 
         return render(request, 'profiles/show_artist_preferences.html',
-                      {"artists": prlist.get_artists(), "is_your_profile":is_your_profile, "profile": profile})
+                      {"artists": prlist.get_artists(), "is_your_profile":is_your_profile, "profile": profile, "exist": exist})
     except Profile.DoesNotExist:
-        return render(request, 'not_found.html', {'what': 'profile'})
+        return render(request, 'not_found.html')
 
 
 @login_required(login_url='login')
@@ -196,13 +200,19 @@ def show_profile_preferences_playlists(request, profile_id):
         else:
             is_your_profile = False
 
+        exist = False
+        if len(prlist.get_playlists()) > 0:
+            exist = True
+
 
 
         return render(request, 'profiles/show_playlists_preferences.html',
-                      {"playlists": prlist.get_playlists(), "is_your_profile": is_your_profile, "profile": profile})
+                      {"playlists": prlist.get_playlists(), "is_your_profile": is_your_profile, "profile": profile, "exist": exist})
     except Profile.DoesNotExist:
-        return render(request, 'not_found.html', {'what': 'profile'})
+        return render(request, 'not_found.html')
 
 @login_required(login_url='login')
 def mainPage(request):
-    return render(request, 'main.html')
+    prlist = request.user.profile.preferencelist
+
+    return render(request, 'main.html', {"user": request.user,"users": User.objects.all(), "genres":prlist.get_genres(), 'users_num': len(User.objects.all()), "genres_num":  len(prlist.get_genres()),"songs": Song.objects.all(), "songs_num": len(Song.objects.all()), "playlists": Playlist.objects.all(), "playlists_num": len(Playlist.objects.all())})

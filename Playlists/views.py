@@ -19,14 +19,14 @@ from django.dispatch import receiver
 from .forms import PlaylistForm
 from django.http import HttpResponse
 
+
 @login_required(login_url='login')
 def create_playlist(request):
     if request.method == 'POST':
-        playlist_form = PlaylistForm(request.POST,request.FILES)
+        playlist_form = PlaylistForm(request.POST, request.FILES)
 
         if playlist_form.is_valid():
-            new_playlist= playlist_form.save(commit=False)
-
+            new_playlist = playlist_form.save(commit=False)
 
             new_playlist.author = request.user.profile
 
@@ -39,12 +39,12 @@ def create_playlist(request):
     return render(request, 'create_playlist.html',
                   {'playlist_form': playlist_form})
 
+
 @login_required(login_url='login')
 def change_playlist(request, playlist_id):
     try:
         playlist_form = PlaylistForm(request.POST, request.FILES, instance=Playlist.objects.get(slug=playlist_id))
         if request.method == 'POST':
-
 
             if playlist_form.is_valid():
                 playlist_form.save()
@@ -54,10 +54,9 @@ def change_playlist(request, playlist_id):
             playlist_form = PlaylistForm()
 
         return render(request, 'create_playlist.html',
-                  {'playlist_form': playlist_form})
+                      {'playlist_form': playlist_form})
     except Playlist.DoesNotExist:
-        return render(request, 'not_found.html', {'what': 'playlist'})
-
+        return render(request, 'not_found.html')
 
 
 @login_required(login_url='login')
@@ -69,7 +68,7 @@ def delete_playlist(request, playlist_id):
         messages.success(request, 'This playlist has been deleted successfully')
         return redirect(request.path_info)
     except Playlist.DoesNotExist:
-        return render(request, 'not_found.html', {'what': 'playlist'})
+        return render(request, 'not_found.html')
 
 
 @login_required(login_url='login')
@@ -78,8 +77,6 @@ def playlist_page(request, playlist_id):
         playlist = Playlist.objects.get(slug=playlist_id)
         profile = playlist.author
         prlist = PreferenceList.objects.get(profile=request.user.profile)
-
-
 
         if profile.user == request.user:
             is_your_playlist = True
@@ -100,14 +97,15 @@ def playlist_page(request, playlist_id):
 
         visible = True
         if playlist.is_private and is_your_playlist == False:
-            visible = False
+            return render(request, "not_found.html")
 
         temp = set(temp)
         artists = list(temp)
-        context = {"profile": profile,"is_liked": is_liked, "playlist" : playlist, "artists" : artists, "artists_num": len(artists),
-                   "is_your_playlist": is_your_playlist, "songs" : songs,  "songs_num": len(songs), "visible" : visible}
+        context = {"profile": profile, "is_liked": is_liked, "playlist": playlist, "artists": artists,
+                   "artists_num": len(artists),
+                   "is_your_playlist": is_your_playlist, "songs": songs, "songs_num": len(songs), "visible": visible}
     except Playlist.DoesNotExist:
-        context = {"visible": False}
+        return render(request, 'not_found.html')
     return render(request, 'playlist_page.html', context)
 
 
@@ -122,7 +120,7 @@ def like_playlist(request, playlist_id):
         messages.success(request, 'You liked this playlist')
         return redirect('../../playlist/' + playlist_id)
     except Playlist.DoesNotExist:
-        return render(request, 'not_found.html', {'what': 'playlist'})
+        return render(request, 'not_found.html')
 
 
 @login_required(login_url='login')
@@ -136,7 +134,8 @@ def unlike_playlist(request, playlist_id):
         messages.success(request, 'You unliked this playlist')
         return redirect('../../playlist/' + playlist_id)
     except Playlist.DoesNotExist:
-        return render(request, 'not_found.html', {'what': 'playlist'})
+        return render(request, 'not_found.html')
+
 
 '''@login_required(login_url='login')
 def delete_song_from_playlist(request, playlist_id,song_id):
@@ -149,4 +148,3 @@ def delete_song_from_playlist(request, playlist_id,song_id):
         return redirect(request.path_info)
     except Playlist.DoesNotExist:
         return render(request, 'not_found.html', {'what': 'song'})'''
-

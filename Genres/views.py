@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render
 from django.contrib import messages
 
-from django.contrib.auth.decorators import  login_required
+from django.contrib.auth.decorators import login_required
 
 from django.contrib.auth import authenticate, login, logout
 from .models import Genre
@@ -25,6 +25,6 @@ def create_genre(request):
             genre_form = GenreForm()
 
         return render(request, 'create_genre.html',
-                  {'genre_form': genre_form, 'exist': False})
+                      {'genre_form': genre_form, 'exist': False})
     except Genre.DoesNotExist:
-        return render(request, 'not_found.html', {'what': 'artist'})
+        pass
